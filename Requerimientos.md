@@ -1,4 +1,4 @@
-# Análisis de Requisitos Funcionales
+# Análisis de Requerimientos Funcionales
 
 1. **Registro**
     <br>
