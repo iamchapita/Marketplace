@@ -1,0 +1,51 @@
+CREATE DATABASE IF NOT EXISTS MarketPlace;
+
+USE MarketPlace;
+
+CREATE TABLE User(
+    id SERIAL PRIMARY KEY,
+    firstName VARCHAR(150) NOT NULL,
+    lastName VARCHAR(150) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    phoneNumber VARCHAR(150) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    birthDate DATE NOT NULL,
+    isAdmin BOOLEAN NOT NULL DEFAULT FALSE,
+    isSeller BOOLEAN NOT NULL DEFAULT FALSE,
+    isClient BOOLEAN NOT NULL DEFAULT TRUE,
+    raiting  DOUBLE UNSIGNED NOT NULL DEFAULT 0.0
+);
+
+CREATE TABLE Direction(
+    id SERIAL PRIMARY KEY,
+    department VARCHAR(100) NOT NULL,
+    municipality VARCHAR(100) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    fkUserId  BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (fkUserId) REFERENCES  User(id)
+);
+
+CREATE TABLE Category(
+    id  INT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Product(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(250) NOT NULL,
+    fkCategoryId  INT UNSIGNED NOT NULL,
+    price  DOUBLE UNSIGNED NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    fkUserId  BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (fkUserId) REFERENCES User(id)
+);
+
+CREATE TABLE ProductSeller(
+    id SERIAL PRIMARY KEY,
+    fkProduct BIGINT UNSIGNED NOT NULL,
+    fkUserId BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY(fkProduct) REFERENCES Product(id),
+    FOREIGN KEY (fkUserId) REFERENCES User(id)
+);
+
+SELECT * FROM Product;
