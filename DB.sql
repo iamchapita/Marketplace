@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS MarketPlace;
+CREATE DATABASE IF NOT EXISTS Marketplace;
 
-USE MarketPlace;
+USE Marketplace;
 
 CREATE TABLE User(
     id SERIAL PRIMARY KEY,
@@ -48,4 +48,3 @@ CREATE TABLE ProductSeller(
     FOREIGN KEY (fkUserId) REFERENCES User(id)
 );
 
-SELECT * FROM Product;
