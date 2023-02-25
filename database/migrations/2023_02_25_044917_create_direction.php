@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('Direction', function (Blueprint $table) {
             $table->id();
-            $table->string('department', 100);
-            $table->string('municipality', 100);
+            $table->tinyInteger('departmentIdFK')->unsigned();
+            $table->smallInteger('municipalityIdFK')->unsigned();
             $table->string('description');
             $table->bigInteger('userIdFK')->nullable(false)->unsigned();
             $table->timestamps();
