@@ -12,14 +12,27 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    // Sobreescritura del nombre de la Tabla en la BD
+    /*
+        Laravel por defecto agrega una 's' al final del nombre de la tabla
+        se utiliza esta variable evitar que Laravel agregue la 's'.
+    */
+    protected $table = 'User';
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'firstName',
+        'lastName',
         'email',
+        'phoneNumber',
+        'birthDate',
+        'isAdmin',
+        'isSeller',
+        'isClient',
+        'raiting',
         'password',
     ];
 
@@ -39,6 +52,7 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 }
