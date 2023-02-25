@@ -11,23 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('Direction', function (Blueprint $table) {
-            $table->foreign('userIdFK')->references('id')->on('User');
-            $table->foreign('departmentIdFK')->references('id')->on('Department');
-            $table->foreign('municipalityIdFK')->references('id')->on('Municipality');
+        Schema::table('directions', function (Blueprint $table) {
+            $table->foreign('userIdFK')->references('id')->on('users');
+            $table->foreign('departmentIdFK')->references('id')->on('departments');
+            $table->foreign('municipalityIdFK')->references('id')->on('municipalities');
         });
 
-        Schema::table('Product', function (Blueprint $table) {
-            $table->foreign('userIdFK')->references('id')->on('User');
+        Schema::table('products', function (Blueprint $table) {
+            $table->foreign('userIdFK')->references('id')->on('users');
         });
 
-        Schema::table('ProductSeller', function (Blueprint $table) {
-            $table->foreign('productIdFK')->references('id')->on('Product');
-            $table->foreign('userIdFK')->references('id')->on('User');
+        Schema::table('product_sellers', function (Blueprint $table) {
+            $table->foreign('productIdFK')->references('id')->on('products');
+            $table->foreign('userIdFK')->references('id')->on('users');
         });
 
-        Schema::table('Municipality', function (Blueprint $table) {
-            $table->foreign('departmentIdFK')->references('id')->on('Department');
+        Schema::table('municipalities', function (Blueprint $table) {
+            $table->foreign('departmentIdFK')->references('id')->on('departments');
         });
     }
 
