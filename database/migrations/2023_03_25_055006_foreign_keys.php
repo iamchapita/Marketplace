@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::table('Direction', function (Blueprint $table) {
             $table->foreign('userIdFK')->references('id')->on('User');
+            $table->foreign('departmentIdFK')->references('id')->on('Department');
+            $table->foreign('municipalityIdFK')->references('id')->on('Municipality');
         });
 
         Schema::table('Product', function (Blueprint $table) {
@@ -22,6 +24,10 @@ return new class extends Migration
         Schema::table('ProductSeller', function (Blueprint $table) {
             $table->foreign('productIdFK')->references('id')->on('Product');
             $table->foreign('userIdFK')->references('id')->on('User');
+        });
+
+        Schema::table('Municipality', function (Blueprint $table) {
+            $table->foreign('departmentIdFK')->references('id')->on('Department');
         });
     }
 
