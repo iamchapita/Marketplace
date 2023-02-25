@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -38,10 +39,10 @@ class AuthController extends Controller
         if ($validator->passes()) {
 
             $user = User::create([
-                'firstName'=> $request->firstName,
-                'lastName'=> $request->lastName,
+                'firstName' => $request->firstName,
+                'lastName' => $request->lastName,
                 'dni' => $request->dni,
-                'email'=> $request->email,
+                'email' => $request->email,
                 'phoneNumber' => $request->phoneNumber,
                 'birthDate' => $request->birthDate,
                 'isAdmin' => $request->isAdmin,
@@ -57,5 +58,21 @@ class AuthController extends Controller
                 'token_type' => 'Bearer',
             ]);
         }
+    }
+
+    public function login(Request $request)
+    {
+
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json([
+                'message' => 'Invalid login details'
+            ], 401);
+        }
+        $user = User::where('email', $request['email'])->firstOrFail();
+        $token = $user->createToken('auth_token')->plainTextToken;
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+        ]);
     }
 }
