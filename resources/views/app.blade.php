@@ -6,7 +6,9 @@
     <meta name="viewport" content="initial-scale=1, width=device-width" />
     <title>Marketplace</title>
 
-    @vite(['resources/js/app.jsx', 'resources/sass/app.scss'])
+    @viteReactRefresh
+    @vite('resources/js/app.jsx')
+
 </head>
 
 <body>
