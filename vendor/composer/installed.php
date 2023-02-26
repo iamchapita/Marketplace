@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'laravel/laravel',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => '02e51f30b28a2428427300afa5d01f985f4e20ae',
+        'pretty_version' => 'v10.0.3',
+        'version' => '10.0.3.0',
+        'reference' => NULL,
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -371,9 +371,9 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => '02e51f30b28a2428427300afa5d01f985f4e20ae',
+            'pretty_version' => 'v10.0.3',
+            'version' => '10.0.3.0',
+            'reference' => NULL,
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -421,15 +421,6 @@
             'reference' => '04a2d3bd0d650c0764f70bf49d1ee39393e4eb10',
             'type' => 'library',
             'install_path' => __DIR__ . '/../laravel/tinker',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
-        'laravel/ui' => array(
-            'pretty_version' => 'v4.2.1',
-            'version' => '4.2.1.0',
-            'reference' => '05ff7ac1eb55e2dfd10edcfb18c953684d693907',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../laravel/ui',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
@@ -724,8 +715,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '3.0.0',
-                1 => '1.0|2.0|3.0',
+                0 => '1.0|2.0|3.0',
+                1 => '3.0.0',
             ),
         ),
         'psr/simple-cache' => array(

@@ -4,68 +4,61 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class UserController extends Controller
 {
     public function register(Request $request)
     {
-        $this->validator($request->all())->validate();
-        $user = $this->create($request->all());
-        $this->guard()->login($user);
-        return response()->json([
-            'user' => $user,
-            'message' => 'registration successful'
-        ], 200);
-    }
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'firstName' => ['required', 'string', 'max:255'],
-            'lastName' => ['required', 'string', 'max:255'],
-            'dni' => ['required', 'string', 'max:15'],
-            'phoneNumber' => ['required', 'string', 'max:15'],
-            'birthDate' => ['required', 'date'],
-            'isAdmin' => ['required', 'boolean'],
-            'isSeller' => ['required', 'boolean'],
-            'isClient' => ['required', 'boolean'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:4'],
+        // Validate request data
+        $validator = Validator::make($request->all(), [
+            'firstName' => 'required|string|max:80',
+            'lastName' => 'required|string|max:80',
+            'dni' => 'required|string|min:15',
+            'email' => 'required|email|unique:users|max:255',
+            'phoneNumber' => 'required|string',
+            'birthDate' => 'required|date',
+            'password' => 'required|min:10',
+            'isAdmin' => 'required|boolean',
+            'isClient' => 'required|boolean',
+            'isSeller' => 'required|boolean'
         ]);
-    }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\User
-     */
-    protected function create(array $data)
-    {
-        return User::create([
-            'firstName' => $data['firstName'],
-            'lastName' => $data['lastName'],
-            'dni' => $data['dni'],
-            'phoneNumber' => $data['phoneNumber'],
-            'birthDate' => $data['birthDate'],
-            'isAdmin' => $data['isAdmin'],
-            'isSeller' => $data['isSeller'],
-            'isClient' => $data['isClient'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
-    }
-    protected function guard()
-    {
-        return Auth::guard();
+        // Return errors if validation error occur.
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return response()->json([
+                'error' => $errors
+            ], 400);
+        }
+
+        // Check if validation pass then create user and auth token. Return the auth token
+        if ($validator->passes()) {
+
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user) {
+                $user = User::create([
+                    'firstName' => $request->firstName,
+                    'lastName' => $request->lastName,
+                    'dni' => $request->dni,
+                    'email' => $request->email,
+                    'phoneNumber' => $request->phoneNumber,
+                    'birthDate' => $request->birthDate,
+                    'isAdmin' => $request->isAdmin,
+                    'isClient' => $request->isClient,
+                    'isSeller' => $request->isSeller,
+                    'password' => Hash::make($request->password)
+                ]);
+                // $token = $user->createToken('auth_token')->plainTextToken;
+
+                return response()->json([
+                    'user' => $user
+                ], 200);
+            }
+        }
     }
 
     public function login(Request $request)

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInite05aaaeeb3babf5da0e1e0830c0a6139
+class ComposerStaticInit83b0bc51b904aeb944d1e0117e465ced
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -117,7 +117,6 @@ class ComposerStaticInite05aaaeeb3babf5da0e1e0830c0a6139
             'League\\Flysystem\\' => 17,
             'League\\Config\\' => 14,
             'League\\CommonMark\\' => 18,
-            'Laravel\\Ui\\' => 11,
             'Laravel\\Tinker\\' => 15,
             'Laravel\\SerializableClosure\\' => 28,
             'Laravel\\Sanctum\\' => 16,
@@ -126,7 +125,6 @@ class ComposerStaticInite05aaaeeb3babf5da0e1e0830c0a6139
         'I' => 
         array (
             'Illuminate\\Support\\' => 19,
-            'Illuminate\\Foundation\\Auth\\' => 27,
             'Illuminate\\' => 11,
         ),
         'G' => 
@@ -342,8 +340,8 @@ class ComposerStaticInite05aaaeeb3babf5da0e1e0830c0a6139
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -389,10 +387,6 @@ class ComposerStaticInite05aaaeeb3babf5da0e1e0830c0a6139
         array (
             0 => __DIR__ . '/..' . '/league/commonmark/src',
         ),
-        'Laravel\\Ui\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/laravel/ui/src',
-        ),
         'Laravel\\Tinker\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/tinker/src',
@@ -414,10 +408,6 @@ class ComposerStaticInite05aaaeeb3babf5da0e1e0830c0a6139
             0 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Macroable',
             1 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Collections',
             2 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Conditionable',
-        ),
-        'Illuminate\\Foundation\\Auth\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/laravel/ui/auth-backend',
         ),
         'Illuminate\\' => 
         array (
@@ -517,11 +507,7 @@ class ComposerStaticInite05aaaeeb3babf5da0e1e0830c0a6139
     public static $classMap = array (
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
-        'App\\Http\\Controllers\\CategoryController' => __DIR__ . '/../..' . '/app/Http/Controllers/CategoryController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
-        'App\\Http\\Controllers\\DirectionController' => __DIR__ . '/../..' . '/app/Http/Controllers/DirectionController.php',
-        'App\\Http\\Controllers\\ProductController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProductController.php',
-        'App\\Http\\Controllers\\ProductSellerController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProductSellerController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
@@ -532,12 +518,6 @@ class ComposerStaticInite05aaaeeb3babf5da0e1e0830c0a6139
         'App\\Http\\Middleware\\TrustProxies' => __DIR__ . '/../..' . '/app/Http/Middleware/TrustProxies.php',
         'App\\Http\\Middleware\\ValidateSignature' => __DIR__ . '/../..' . '/app/Http/Middleware/ValidateSignature.php',
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
-        'App\\Models\\Category' => __DIR__ . '/../..' . '/app/Models/Category.php',
-        'App\\Models\\Department' => __DIR__ . '/../..' . '/app/Models/Department.php',
-        'App\\Models\\Direction' => __DIR__ . '/../..' . '/app/Models/Direction.php',
-        'App\\Models\\Municipality' => __DIR__ . '/../..' . '/app/Models/Municipality.php',
-        'App\\Models\\Product' => __DIR__ . '/../..' . '/app/Models/Product.php',
-        'App\\Models\\ProductSeller' => __DIR__ . '/../..' . '/app/Models/ProductSeller.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
@@ -2067,16 +2047,8 @@ class ComposerStaticInite05aaaeeb3babf5da0e1e0830c0a6139
         'Illuminate\\Foundation\\Application' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/Application.php',
         'Illuminate\\Foundation\\Auth\\Access\\Authorizable' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/Auth/Access/Authorizable.php',
         'Illuminate\\Foundation\\Auth\\Access\\AuthorizesRequests' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/Auth/Access/AuthorizesRequests.php',
-        'Illuminate\\Foundation\\Auth\\AuthenticatesUsers' => __DIR__ . '/..' . '/laravel/ui/auth-backend/AuthenticatesUsers.php',
-        'Illuminate\\Foundation\\Auth\\ConfirmsPasswords' => __DIR__ . '/..' . '/laravel/ui/auth-backend/ConfirmsPasswords.php',
         'Illuminate\\Foundation\\Auth\\EmailVerificationRequest' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/Auth/EmailVerificationRequest.php',
-        'Illuminate\\Foundation\\Auth\\RedirectsUsers' => __DIR__ . '/..' . '/laravel/ui/auth-backend/RedirectsUsers.php',
-        'Illuminate\\Foundation\\Auth\\RegistersUsers' => __DIR__ . '/..' . '/laravel/ui/auth-backend/RegistersUsers.php',
-        'Illuminate\\Foundation\\Auth\\ResetsPasswords' => __DIR__ . '/..' . '/laravel/ui/auth-backend/ResetsPasswords.php',
-        'Illuminate\\Foundation\\Auth\\SendsPasswordResetEmails' => __DIR__ . '/..' . '/laravel/ui/auth-backend/SendsPasswordResetEmails.php',
-        'Illuminate\\Foundation\\Auth\\ThrottlesLogins' => __DIR__ . '/..' . '/laravel/ui/auth-backend/ThrottlesLogins.php',
         'Illuminate\\Foundation\\Auth\\User' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/Auth/User.php',
-        'Illuminate\\Foundation\\Auth\\VerifiesEmails' => __DIR__ . '/..' . '/laravel/ui/auth-backend/VerifiesEmails.php',
         'Illuminate\\Foundation\\Bootstrap\\BootProviders' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/Bootstrap/BootProviders.php',
         'Illuminate\\Foundation\\Bootstrap\\HandleExceptions' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/Bootstrap/HandleExceptions.php',
         'Illuminate\\Foundation\\Bootstrap\\LoadConfiguration' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/Bootstrap/LoadConfiguration.php',
@@ -2754,15 +2726,6 @@ class ComposerStaticInite05aaaeeb3babf5da0e1e0830c0a6139
         'Laravel\\Tinker\\Console\\TinkerCommand' => __DIR__ . '/..' . '/laravel/tinker/src/Console/TinkerCommand.php',
         'Laravel\\Tinker\\TinkerCaster' => __DIR__ . '/..' . '/laravel/tinker/src/TinkerCaster.php',
         'Laravel\\Tinker\\TinkerServiceProvider' => __DIR__ . '/..' . '/laravel/tinker/src/TinkerServiceProvider.php',
-        'Laravel\\Ui\\AuthCommand' => __DIR__ . '/..' . '/laravel/ui/src/AuthCommand.php',
-        'Laravel\\Ui\\AuthRouteMethods' => __DIR__ . '/..' . '/laravel/ui/src/AuthRouteMethods.php',
-        'Laravel\\Ui\\ControllersCommand' => __DIR__ . '/..' . '/laravel/ui/src/ControllersCommand.php',
-        'Laravel\\Ui\\Presets\\Bootstrap' => __DIR__ . '/..' . '/laravel/ui/src/Presets/Bootstrap.php',
-        'Laravel\\Ui\\Presets\\Preset' => __DIR__ . '/..' . '/laravel/ui/src/Presets/Preset.php',
-        'Laravel\\Ui\\Presets\\React' => __DIR__ . '/..' . '/laravel/ui/src/Presets/React.php',
-        'Laravel\\Ui\\Presets\\Vue' => __DIR__ . '/..' . '/laravel/ui/src/Presets/Vue.php',
-        'Laravel\\Ui\\UiCommand' => __DIR__ . '/..' . '/laravel/ui/src/UiCommand.php',
-        'Laravel\\Ui\\UiServiceProvider' => __DIR__ . '/..' . '/laravel/ui/src/UiServiceProvider.php',
         'League\\CommonMark\\CommonMarkConverter' => __DIR__ . '/..' . '/league/commonmark/src/CommonMarkConverter.php',
         'League\\CommonMark\\ConverterInterface' => __DIR__ . '/..' . '/league/commonmark/src/ConverterInterface.php',
         'League\\CommonMark\\Delimiter\\Delimiter' => __DIR__ . '/..' . '/league/commonmark/src/Delimiter/Delimiter.php',
@@ -6266,10 +6229,10 @@ class ComposerStaticInite05aaaeeb3babf5da0e1e0830c0a6139
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInite05aaaeeb3babf5da0e1e0830c0a6139::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite05aaaeeb3babf5da0e1e0830c0a6139::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInite05aaaeeb3babf5da0e1e0830c0a6139::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInite05aaaeeb3babf5da0e1e0830c0a6139::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit83b0bc51b904aeb944d1e0117e465ced::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit83b0bc51b904aeb944d1e0117e465ced::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit83b0bc51b904aeb944d1e0117e465ced::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit83b0bc51b904aeb944d1e0117e465ced::$classMap;
 
         }, null, ClassLoader::class);
     }
