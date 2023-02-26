@@ -38,25 +38,28 @@ class AuthController extends Controller
         // Check if validation pass then create user and auth token. Return the auth token
         if ($validator->passes()) {
 
-            $user = User::create([
-                'firstName' => $request->firstName,
-                'lastName' => $request->lastName,
-                'dni' => $request->dni,
-                'email' => $request->email,
-                'phoneNumber' => $request->phoneNumber,
-                'birthDate' => $request->birthDate,
-                'isAdmin' => $request->isAdmin,
-                'isClient' => $request->isClient,
-                'isSeller' => $request->isSeller,
-                'password' => Hash::make($request->password)
-            ]);
+            $user = User::where('email', $request->email)->first();
 
-            $token = $user->createToken('auth_token')->plainTextToken;
+            if (!$user) {
+                $user = User::create([
+                    'firstName' => $request->firstName,
+                    'lastName' => $request->lastName,
+                    'dni' => $request->dni,
+                    'email' => $request->email,
+                    'phoneNumber' => $request->phoneNumber,
+                    'birthDate' => $request->birthDate,
+                    'isAdmin' => $request->isAdmin,
+                    'isClient' => $request->isClient,
+                    'isSeller' => $request->isSeller,
+                    'password' => Hash::make($request->password)
+                ]);
+                $token = $user->createToken('auth_token')->plainTextToken;
 
-            return response()->json([
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-            ]);
+                return response()->json([
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                ]);
+            }
         }
     }
 
