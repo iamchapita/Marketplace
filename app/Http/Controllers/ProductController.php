@@ -22,6 +22,25 @@ class ProductController extends Controller
     {
         //
     }
+    
+    /**
+     * Show list product.
+     */
+    public function getProduct(){
+      return response()->json(product::all(),200); 
+    }
+ 
+    /**
+     * 
+     */
+    public function getProductId($id){
+       $product=product::find($id);
+       if(is_null($product)){
+        return response()->json(['Mensaje'=>'Producto no encontrado'],404);
+       }
+      return response()->json($product::find($id),200);
+    }
+
 
     /**
      * Store a newly created resource in storage.
