@@ -20,10 +20,7 @@ class UserController extends Controller
             'email' => 'required|email|unique:users|max:255',
             'phoneNumber' => 'required|string',
             'birthDate' => 'required|date',
-            'password' => 'required|min:10',
-            'isAdmin' => 'required|boolean',
-            'isClient' => 'required|boolean',
-            'isSeller' => 'required|boolean'
+            'password' => 'required|min:10'
         ]);
 
         // Return errors if validation error occur.
@@ -47,9 +44,6 @@ class UserController extends Controller
                     'email' => $request->email,
                     'phoneNumber' => $request->phoneNumber,
                     'birthDate' => $request->birthDate,
-                    'isAdmin' => $request->isAdmin,
-                    'isClient' => $request->isClient,
-                    'isSeller' => $request->isSeller,
                     'password' => Hash::make($request->password)
                 ]);
                 // $token = $user->createToken('auth_token')->plainTextToken;
