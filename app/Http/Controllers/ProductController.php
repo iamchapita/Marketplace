@@ -25,9 +25,11 @@ class ProductController extends Controller
     
     /**
      * Show list product.
+     * 
      */
     public function getProduct(){
       return response()->json(product::all(),200); 
+      
     }
  
     /**
@@ -41,6 +43,28 @@ class ProductController extends Controller
       return response()->json($product::find($id),200);
     }
 
+    /**
+     * Edit products
+     */
+    public function editProduct(Request $request, $id){
+        $product = Products::find($id);
+        $product->name = $request->name; //price userIdFK
+        $product->price = $request->price;
+        $product->userIdFK = $request->userIdFK;
+    
+        $product->save();
+    
+        return response()->json(['message' => 'Producto actualizado']);
+    }
+
+    public function insertProduct(Request $request){
+        $product=product::create($request->all());
+        return response($product,200);
+
+    }
+
+   
+    
 
     /**
      * Store a newly created resource in storage.
@@ -61,10 +85,10 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product)
-    {
+   // public function edit(Product $product)
+   // {
         //
-    }
+   // }
 
     /**
      * Update the specified resource in storage.
