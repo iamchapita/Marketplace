@@ -19,6 +19,7 @@ return new class extends Migration
 
         Schema::table('products', function (Blueprint $table) {
             $table->foreign('userIdFK')->references('id')->on('users');
+            $table->foreign('categoryIdFK')->references('id')->on('categories');
         });
 
         Schema::table('product_sellers', function (Blueprint $table) {

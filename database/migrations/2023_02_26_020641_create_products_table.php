@@ -14,8 +14,13 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
-            $table->double('price',null, null, true);
+            $table->string('description', 250);
+            $table->double('price', null, null, true);
+            $table->string('photos', 100);
+            $table->boolean('isAvailable')->default(true);
+            $table->boolean('isBanned')->default(false);
             $table->bigInteger('userIdFK')->nullable(false)->unsigned();
+            $table->bigInteger('categoryIdFK')->nullable(false)->unsigned();
         });
     }
 
