@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,9 @@ Route::get('product', 'App\Http\Controllers\ProductController@getProduct');
 
 Route::get('product/{id}', 'App\Http\Controllers\ProductController@getProductId');
 
-Route::post('Addproduct','App\Http\Controllers\ProductController@insertProduct');
-
 Route::put('product/{id}', 'App\Http\Controllers\ProductController@editProduct');
+
+Route::post('/register', [UserController::class, 'register']);
+Route::post('/login', [UserController::class, 'login']);
+Route::get('/logout', [UserController::class, 'logout']);
+

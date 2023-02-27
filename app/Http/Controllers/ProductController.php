@@ -57,14 +57,6 @@ class ProductController extends Controller
         return response()->json(['message' => 'Producto actualizado']);
     }
 
-    public function insertProduct(Request $request){
-        $product=product::create($request->all());
-        return response($product,200);
-
-    }
-
-   
-    
 
     /**
      * Store a newly created resource in storage.
