@@ -21,3 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('product', 'App\Http\Controllers\ProductController@getProduct');
 
 Route::get('product/{id}', 'App\Http\Controllers\ProductController@getProductId');
+
+Route::post('Addproduct','App\Http\Controllers\ProductController@insertProduct');
+
+Route::put('product/{id}', 'App\Http\Controllers\ProductController@editProduct');
