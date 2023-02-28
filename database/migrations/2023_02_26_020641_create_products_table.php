@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('description', 250);
             $table->double('price', null, null, true);
             $table->string('photos', 100);
+            $table->string('status', 20);
             $table->boolean('isAvailable')->default(true);
             $table->boolean('isBanned')->default(false);
             $table->bigInteger('userIdFK')->nullable(false)->unsigned();

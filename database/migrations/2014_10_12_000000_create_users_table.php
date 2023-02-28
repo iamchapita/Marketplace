@@ -23,6 +23,8 @@ return new class extends Migration
             $table->boolean('isAdmin')->default(0);
             $table->boolean('isClient')->default(1);
             $table->boolean('isSeller')->default(0);
+            $table->boolean('isBanned')->default(0);
+            $table->boolean('isEnabled')->default(1);
             $table->double('raiting')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
