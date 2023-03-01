@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/product', [ProductController::class, 'getProduct']);
+Route::get('/products', [ProductController::class, 'getProduct']);
 Route::get('/product/{id}', [ProductController::class, 'getProductId']);
 Route::put('/product/{id}', [ProductController::class, 'editProduct']);
 Route::post('/register', [UserController::class, 'register']);
