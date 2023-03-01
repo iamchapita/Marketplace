@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
+Route::post('/insertProduct', [ProductController::class, 'create']);
 Route::get('/products', [ProductController::class, 'getProduct']);
 Route::get('/product/{id}', [ProductController::class, 'getProductId']);
 Route::put('/product/{id}', [ProductController::class, 'editProduct']);

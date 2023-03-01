@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
@@ -11,6 +14,7 @@ class ProductController extends Controller
     protected function validateData($request)
     {
         // Extrayendo las llaves del arreglo de campos a validar
+        $request = $request->all();
         $keys = array_keys($request);
 
         // Estableciendo los nombres personalizados de los atributos
@@ -24,8 +28,8 @@ class ProductController extends Controller
 
         // Estableciendo reglas de cada campo respectivamente
         $rules = array(
-            $keys[0] => ['required', 'string', 'max:255', 'regex:/[\w ,+-/#$()]+/'],
-            $keys[1] => ['max:255', 'string', 'regex:/([a-zA-Z \.()0-9 , :\-+=! $%&*? "" {}\n<>?¿])+/'],
+            $keys[0] => ['required', 'string', 'max:255', 'regex:/([\w \,\+\-\/\#\$\(\)]+)/'],
+            $keys[1] => ['max:255', 'string', 'regex:/([a-zA-Z \.\(\)0-9 \, \:\-\+\=\!\$\%\&\*\?\"\"\{\}\n\<\>\?\¿]+)/'],
             $keys[2] => ['required', 'numeric', 'min:0', 'regex:/(0\.((0[1-9]{1})|([1-9]{1}([0-9]{1})?)))|(([1-9]+[0-9]*)(\.([0-9]{1,2}))?)/'],
             $keys[3] => ['required', 'string'],
             $keys[4] => ['required', 'max:20', 'string', 'in:Usado,Nuevo']
@@ -80,9 +84,20 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+
+        $validator = $this->validateData($request);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()]);
+        } else {
+
+            $values = $request->all();
+            DB::table('products')->insert($values);
+
+            return response()->json(['success' => 'true']);
+        }
     }
 
     /**
