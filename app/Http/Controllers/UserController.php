@@ -74,7 +74,7 @@ class UserController extends Controller
             $errors = $validator->errors();
             return response()->json([
                 'error' => $errors
-            ], 400);
+            ]);
         }
 
         // Check if validation pass then create user and auth token. Return the auth token
@@ -108,15 +108,14 @@ class UserController extends Controller
         if (Auth::attempt($credentials)) {
             // Authentication passed...
             $authuser = auth()->user();
-            return response()->json(['message' => 'Login successful'], 200);
+            return response()->json(['message'=> true], 200);
         } else {
-            return response()->json(['message' => 'Invalid email or password'], 401);
+            return response()->json(['message' => false]);
         }
     }
 
     public function logout()
     {
         Auth::logout();
-        return response()->json(['message' => 'Logged Out'], 200);
     }
 }
