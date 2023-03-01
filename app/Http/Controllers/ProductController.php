@@ -47,15 +47,38 @@ class ProductController extends Controller
      * Edit products
      */
     public function editProduct(Request $request, $id){
-        $product = Products::find($id);
-        $product->name = $request->name; //price userIdFK
-        $product->price = $request->price;
-        $product->userIdFK = $request->userIdFK;
-    
+        //Para buscar por id los porductos 
+        $product = Product::findOrFail($id);
+        //Hacer las diferentes validaciones
+        $validator = Validator::make($request->all(), [
+        'name' => 'required|max:255|regex:/^[a-zA-Z]+$/',
+        'description' => 'required|max:255',
+        'price' => 'required|numeric|min:0|regex:/^[1-9][0-9]*(?:\.[0-9]{2})?$/',
+        'photos' => 'required|max:255',
+        'isAvailable' => 'required|numeric|min:0',
+        'isBanned' => 'required|numeric|min:0',
+        'userIdFK' => 'required|numeric|min:0',
+        'categoryIdFK' => 'required|max:255',
+        ]);
+        // Si la validación falla, redirigir de vuelta al formulario con los 
+        //errores
+        if ($validator->fails()) {
+        return redirect()->back()->withErrors($validator)->withInput();
+        }
+        //Actualizar Productos
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->price = $request->input('price');
+        $product->photos = $request->input('photos');
+        $product->isAvailable = $request->input('isAvailable');
+        $product->isBanned = $request->input('isBanned');
+        $product->userIdFK = $request->input('userIdFK');
+        $product->categoryIdFK = $request->input('categoryIdFK');
         $product->save();
-    
-        return response()->json(['message' => 'Producto actualizado']);
-    }
+        // Redirigir a la lista de productos con un mensaje de éxito
+        return redirect('/products')->with('success', 'El producto ha sido 
+        actualizado correctamente.');
+        }
 
 
     /**
