@@ -14,12 +14,13 @@ use function PHPSTORM_META\type;
 class ProductController extends Controller
 {
 
-    protected function storeImages($request, $mode='store'){
+    protected function storeImages($request, $mode = 'store')
+    {
 
         // Obteniendo los productos almacenados en la base de datos
         $id = $id = DB::selectOne('select count(*) as id from products')->id;
 
-        if($mode == 'store'){
+        if ($mode == 'store') {
             $id = $id + 1;
         }
 
@@ -35,15 +36,15 @@ class ProductController extends Controller
         // Obteniendo el array de archivos enviados
         $images = json_decode($request->only('photos')['photos'], true)['photos'];
 
-        if($images){
+        if ($images) {
 
-            for ($i=0; $i <  count(array_keys($images)); $i++) {
+            for ($i = 0; $i <  count(array_keys($images)); $i++) {
                 // Se obtiene la imagen en base64
                 $base64_image = $images[$i]['base64Image'];
                 // Se obtiene el nombre de la imagen (incluye extension)
                 $imageName = $images[$i]['name'];
                 // Se almacena el archivo en la ruta
-                Storage::disk('public')->put($path.'/'.$imageName, base64_decode($base64_image));
+                Storage::disk('public')->put($path . '/' . $imageName, base64_decode($base64_image));
             }
             return $path;
         }
@@ -137,11 +138,15 @@ class ProductController extends Controller
 
             // Sobreescribe el campos photos enviados desde el frontend para almacenar
             // la ruta donde se guardaron las imagenes en la BD.
+
             $values['photos'] = $this->storeImages($request, 'store');
 
-            DB::table('products')->insert($values);
-
-            return response()->json(['success' => 'true']);
+            if ($values['photos'] == false) {
+                return response()->json(['message' => 'Error en las imagenes']);
+            } else {
+                DB::table('products')->insert($values);
+                return response()->json(['message' => 'Insercion Completa']);
+            }
         }
     }
 
