@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Direction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DirectionController extends Controller
 {
@@ -28,7 +29,9 @@ class DirectionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $values = $request->all();
+        DB::table('directions')->insert($values);
+        return response()->json(['message' => 'Success']);
     }
 
     /**

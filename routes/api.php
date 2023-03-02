@@ -5,7 +5,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DepartmentsControllers;
 use App\Http\Controllers\MunicipalityControllers;
-use Illuminate\Http\Request;
+use App\Http\Controllers\DirectionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,3 +30,5 @@ Route::post('/createProduct', [ProductController::class, 'create']);
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/departments', [DepartmentsControllers::class, 'index']);
 Route::get('/municipalities', [MunicipalityControllers::class, 'index']);
+
+Route::post('/createDirection', [DirectionController::class, 'store']);
