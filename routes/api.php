@@ -23,3 +23,7 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::get('/logout', [UserController::class, 'logout']);
 Route::post('product','App\Http\Controllers\ProductController@create');
+
+//Creat Departaments
+Route::post('/departments', [DepartmentsControllers::class, 'CreateDepartaments']);
+Route::post('/municipality', [MunicipalityControllers::class, 'CreateMunicipality']);
