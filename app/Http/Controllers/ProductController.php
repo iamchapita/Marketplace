@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-
-use function PHPSTORM_META\type;
 
 class ProductController extends Controller
 {
@@ -34,17 +32,23 @@ class ProductController extends Controller
         }
 
         // Obteniendo el array de archivos enviados
-        $images = json_decode($request->only('photos')['photos'], true)['photos'];
+        $images = $request->only('photos')['photos'];
 
         if ($images) {
 
             for ($i = 0; $i <  count(array_keys($images)); $i++) {
-                // Se obtiene la imagen en base64
-                $base64_image = $images[$i]['base64Image'];
+                // Obteniendo la extension del archivo y la imagen en base64
+                $parts = explode(',', (string)$images[$i]['base64Image']);
+                $extension = explode('/', (string)$parts[0]);
+                $extension = explode(';', (string)$extension[1]);
+                $extension = $extension[0];
+                if ($extension)
+                    // Se obtiene la imagen en base64
+                    $base64_image = $parts[1];
                 // Se obtiene el nombre de la imagen (incluye extension)
-                $imageName = $images[$i]['name'];
+                $imageName = (string)$images[$i]['name'];
                 // Se almacena el archivo en la ruta
-                Storage::disk('public')->put($path . '/' . $imageName, base64_decode($base64_image));
+                Storage::disk('public')->put($path . '/' . $imageName . '.' . $extension, base64_decode($base64_image));
             }
             return $path;
         }
@@ -88,14 +92,14 @@ class ProductController extends Controller
             'unique' => 'El campo :attribute especificado ya siendo utilizado.',
             'string' => 'El campo :attribute debe ser una cadena de texto.',
             'numeric' => 'El campo :attribute debe tener 8 digitos.',
-            'bewtween' => 'El campo :attribute debe estar ser 0 '
+            'bewtween' => 'El campo :attribute debe estar ser 0.'
         );
 
         if (count($keys) > 7) {
 
             // Esyableciendo nombre personalizado a los campos
-            $$customAttributes[$keys[7]] = 'Disponible';
-            $$customAttributes[$keys[8]] = 'Baneado';
+            $customAttributes[$keys[7]] = 'Disponible';
+            $customAttributes[$keys[8]] = 'Baneado';
 
             // Reglas de validacion de los campos
             $rules[$keys[7]] = ['required', 'between:0,1'];
@@ -127,23 +131,23 @@ class ProductController extends Controller
      */
     public function create(Request $request)
     {
+
         $validator = $this->validateData($request);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()]);
         } else {
 
-            // Obteniendo la informacion del formulario para guardar en la BD
-            $values = $request->all();
 
             // Sobreescribe el campos photos enviados desde el frontend para almacenar
             // la ruta donde se guardaron las imagenes en la BD.
+            $path = $this->storeImages($request, 'store');
+            $request->merge(['photos' => $path]);
 
-            $values['photos'] = $this->storeImages($request, 'store');
-
-            if ($values['photos'] == false) {
-                return response()->json(['message' => 'Error en las imagenes']);
+            if ($request['photos'] == false) {
+                return response()->json(['error' => 'Error en las imagenes']);
             } else {
+                $values = $request->all();
                 DB::table('products')->insert($values);
                 return response()->json(['message' => 'Insercion Completa']);
             }
