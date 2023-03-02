@@ -6,10 +6,50 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
+use function PHPSTORM_META\type;
 
 class ProductController extends Controller
 {
+
+    protected function storeImages($request, $mode='store'){
+
+        // Obteniendo los productos almacenados en la base de datos
+        $id = $id = DB::selectOne('select count(*) as id from products')->id;
+
+        if($mode == 'store'){
+            $id = $id + 1;
+        }
+
+        // Ruta a guardar crear y a almacenar
+        $path = 'products/' . $id;
+
+        // Se confirma si la carpeta para el producto existe, de no ser así
+        // se crea
+        if (!Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->makeDirectory($path);
+        }
+
+        // Obteniendo el array de archivos enviados
+        $images = json_decode($request->only('photos')['photos'], true)['photos'];
+
+        if($images){
+
+            for ($i=0; $i <  count(array_keys($images)); $i++) {
+                // Se obtiene la imagen en base64
+                $base64_image = $images[$i]['base64Image'];
+                // Se obtiene el nombre de la imagen (incluye extension)
+                $imageName = $images[$i]['name'];
+                // Se almacena el archivo en la ruta
+                Storage::disk('public')->put($path.'/'.$imageName, base64_decode($base64_image));
+            }
+            return $path;
+        }
+
+        return false;
+    }
 
     protected function validateData($request)
     {
@@ -23,7 +63,9 @@ class ProductController extends Controller
             $keys[1] => 'Descripción',
             $keys[2] => 'Precio',
             $keys[3] => 'Fotos',
-            $keys[4] => 'Estado'
+            $keys[4] => 'Estado',
+            $keys[5] => 'Usario',
+            $keys[6] => 'Categoría'
         );
 
         // Estableciendo reglas de cada campo respectivamente
@@ -31,8 +73,10 @@ class ProductController extends Controller
             $keys[0] => ['required', 'string', 'max:255', 'regex:/([\w \,\+\-\/\#\$\(\)]+)/'],
             $keys[1] => ['max:255', 'string', 'regex:/([a-zA-Z \.\(\)0-9 \, \:\-\+\=\!\$\%\&\*\?\"\"\{\}\n\<\>\?\¿]+)/'],
             $keys[2] => ['required', 'numeric', 'min:0', 'regex:/(0\.((0[1-9]{1})|([1-9]{1}([0-9]{1})?)))|(([1-9]+[0-9]*)(\.([0-9]{1,2}))?)/'],
-            $keys[3] => ['required', 'string'],
-            $keys[4] => ['required', 'max:20', 'string', 'in:Usado,Nuevo']
+            $keys[3] => ['required'],
+            $keys[4] => ['required', 'max:20', 'string', 'in:Usado,Nuevo'],
+            $keys[5] => ['required', 'between:0,1', 'numeric'],
+            $keys[6] => ['required', 'numeric']
         );
 
         // Mensajes personalizados para los errores
@@ -46,19 +90,15 @@ class ProductController extends Controller
             'bewtween' => 'El campo :attribute debe estar ser 0 '
         );
 
-        if (count($keys) > 5) {
+        if (count($keys) > 7) {
 
             // Esyableciendo nombre personalizado a los campos
-            $$customAttributes[$keys[5]] = 'Disponible';
-            $$customAttributes[$keys[6]] = 'Baneado';
-            $$customAttributes[$keys[7]] = 'Usario';
-            $$customAttributes[$keys[8]] = 'Categoría';
+            $$customAttributes[$keys[7]] = 'Disponible';
+            $$customAttributes[$keys[8]] = 'Baneado';
 
             // Reglas de validacion de los campos
-            $rules[$keys[5]] = ['required', 'between:0,1'];
-            $rules[$keys[6]] = ['required', 'between:0,1'];
-            $rules[$keys[7]] = ['required', 'min:0', 'numeric'];
-            $rules[$keys[8]] = ['required', 'min:0', 'numeric'];
+            $rules[$keys[7]] = ['required', 'between:0,1'];
+            $rules[$keys[8]] = ['required', 'between:0,1'];
         }
 
         // Validando los datos
@@ -86,14 +126,19 @@ class ProductController extends Controller
      */
     public function create(Request $request)
     {
-
         $validator = $this->validateData($request);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()]);
         } else {
 
+            // Obteniendo la informacion del formulario para guardar en la BD
             $values = $request->all();
+
+            // Sobreescribe el campos photos enviados desde el frontend para almacenar
+            // la ruta donde se guardaron las imagenes en la BD.
+            $values['photos'] = $this->storeImages($request, 'store');
+
             DB::table('products')->insert($values);
 
             return response()->json(['success' => 'true']);
