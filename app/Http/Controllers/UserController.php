@@ -32,7 +32,7 @@ class UserController extends Controller
             $keys[0] => ['required', 'string', 'max:80'],
             $keys[1] => ['required', 'string', 'max:80'],
             $keys[2] => ['required', 'email', 'unique:users', 'max:50'],
-            $keys[3] => ['required', 'string', 'unique:users','regex:([0-9-]{15})'],
+            $keys[3] => ['required', 'string', 'unique:users', 'regex:([0-9-]{15})'],
             $keys[4] => ['required', 'digits:8', 'unique:users'],
             $keys[5] => ['required', 'date'],
             $keys[6] => ['required', 'string', 'regex:((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,35})']
@@ -44,7 +44,7 @@ class UserController extends Controller
             'date' => 'El campo :attribute es de tipo fecha.',
             'min' => 'El campo :attribute está fuera de rango.',
             'max' => 'El campo :attribute está fuera de rango.',
-            'unique'=> 'El campo :attribute especificado ya siendo utilizado.',
+            'unique' => 'El campo :attribute especificado ya siendo utilizado.',
             'string' => 'El campo :attribute debe ser una cadena de texto.',
             'dni.regex' => 'El campo :attribute debe tener 12 caractéres de longitud(Sin Incluir Guiones).',
             'digits' => 'El campo :attribute debe tener 8 digitos.',
@@ -92,10 +92,12 @@ class UserController extends Controller
                     'birthDate' => $request->birthDate,
                     'password' => Hash::make($request->password)
                 ]);
-                // $token = $user->createToken('auth_token')->plainTextToken;
+
+                $token = $user->createToken('auth_token')->plainTextToken;
 
                 return response()->json([
-                    'user' => $user
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
                 ], 200);
             }
         }
@@ -103,19 +105,25 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            // Authentication passed...
-            $authuser = auth()->user();
-            return response()->json(['message'=> true], 200);
+        if (Auth::attempt($request->only('email', 'password'))) {
+
+            $user = User::where('email', $request['email'])->firstOrFail();
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json(['access_token' => $token, 'token_type' => 'Bearer']);
         } else {
-            return response()->json(['message' => false]);
+            return response()->json(['message' => false], 401);
         }
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        Auth::logout();
+        $request->user()->currentAccessToken()->delete();
+        return response()->json(['message' => 'Logged out'], 200);
+    }
+
+    public function user(Request $request){
+        return $request->user();
     }
 }
