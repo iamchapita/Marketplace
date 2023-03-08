@@ -98,6 +98,7 @@ class UserController extends Controller
                 return response()->json([
                     'access_token' => $token,
                     'token_type' => 'Bearer',
+                    'id' => $user->id
                 ], 200);
             }
         }
@@ -124,6 +125,6 @@ class UserController extends Controller
     }
 
     public function user(Request $request){
-        return $request->user();
+        return $request->user()->only('id');
     }
 }
