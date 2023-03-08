@@ -114,7 +114,7 @@ class UserController extends Controller
 
             return response()->json(['access_token' => $token, 'token_type' => 'Bearer']);
         } else {
-            return response()->json(['message' => false], 401);
+            return response()->json(['message' => 'Credenciales Incorrectas.'], 401);
         }
     }
 
