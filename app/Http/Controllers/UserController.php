@@ -31,11 +31,11 @@ class UserController extends Controller
         $rules = array(
             $keys[0] => ['required', 'string', 'max:80'],
             $keys[1] => ['required', 'string', 'max:80'],
-            $keys[2] => ['required', 'email', 'unique:users', 'max:50'],
-            $keys[3] => ['required', 'string', 'unique:users', 'regex:([0-9-]{15})'],
+            $keys[2] => ['required', 'email', 'unique:users'],
+            $keys[3] => ['required', 'string', 'unique:users'],
             $keys[4] => ['required', 'digits:8', 'unique:users'],
             $keys[5] => ['required', 'date'],
-            $keys[6] => ['required', 'string', 'regex:((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,35})']
+            $keys[6] => ['required', 'string']
         );
 
         // Mensajes personalizados para los errores
@@ -46,9 +46,9 @@ class UserController extends Controller
             'max' => 'El campo :attribute está fuera de rango.',
             'unique' => 'El campo :attribute especificado ya siendo utilizado.',
             'string' => 'El campo :attribute debe ser una cadena de texto.',
-            'dni.regex' => 'El campo :attribute debe tener 12 caractéres de longitud(Sin Incluir Guiones).',
+            'dni' => 'El campo :attribute debe tener 12 caractéres de longitud(Sin Incluir Guiones).',
             'digits' => 'El campo :attribute debe tener 8 digitos.',
-            'password.regex' => 'El campo :attribute debe contener: mayúsculas, minúsculas, números y símbolos. Debe ser mayor de 8 Caractéres.'
+            'password' => 'El campo :attribute debe contener: mayúsculas, minúsculas, números y símbolos. Debe ser mayor de 8 Caractéres.'
         );
 
         // Validando los datos
@@ -74,7 +74,7 @@ class UserController extends Controller
             $errors = $validator->errors();
             return response()->json([
                 'error' => $errors
-            ]);
+            ], 400);
         }
 
         // Check if validation pass then create user and auth token. Return the auth token
