@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->tinyInteger('departmentIdFK')->unsigned();
             $table->smallInteger('municipalityIdFK')->unsigned();
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->bigInteger('userIdFK')->nullable(false)->unsigned();
             $table->timestamps();
         });
