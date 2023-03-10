@@ -29,8 +29,12 @@ class DirectionController extends Controller
      */
     public function store(Request $request)
     {
-        DB::insert('INSERT INTO directions (departmentIdFK, municipalityIdFK, userIdFK) values (?, ?, ?)', [$request->departmentIdFK, $request->municipalityIdFK, $request->userIdFK]);
-        return response()->json(['message' => 'Success']);
+        Direction::create([
+            'departmentIdFK' => $request->departmentIdFK,
+            'municipalityIdFK' => $request->municipalityIdFK,
+            'userIdFK' => $request->userIdFK
+        ]);
+        return response()->json(['message' => 'Success'], 200);
     }
 
     /**
