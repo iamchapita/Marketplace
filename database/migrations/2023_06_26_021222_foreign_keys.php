@@ -30,6 +30,11 @@ return new class extends Migration
         Schema::table('municipalities', function (Blueprint $table) {
             $table->foreign('departmentIdFK')->references('id')->on('departments');
         });
+
+        Schema::table('wish_lists', function (Blueprint $table) {
+            $table->foreign('userIdFK')->references('id')->on('users');
+            $table->foreign('productIdFK')->references('id')->on('products');
+        });
     }
 
     /**
