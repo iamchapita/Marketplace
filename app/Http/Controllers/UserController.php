@@ -121,7 +121,7 @@ class UserController extends Controller
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
-        return response()->json(['message' => 'Logged out'], 200);
+        return response()->json(['message' => 'Cierre de Sesión Completo'], 200);
     }
 
     public function user(Request $request){
