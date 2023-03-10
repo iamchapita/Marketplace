@@ -19,20 +19,23 @@ use Laravel\Sanctum\Http\Controllers;
 |
 */
 
+// Rutas de Inicio de sesón o registro
 Route::post('/register', [UserController::class, 'register'])->name('register');
 Route::post('/login', [UserController::class, 'login'])->name('login');
-Route::get('/logout', [UserController::class, 'logout'])->name('logout')->middleware('auth:sanctum');
+Route::get('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum')->name('logout');
+Route::post('/createDirection', [DirectionController::class, 'store'])->name('createDirection');
+
+// Obtiene el usuario Autenticado
 Route::get('/user', [UserController::class, 'user'])->middleware('auth:sanctum')->name('user');
 
-
-Route::get('/products', [ProductController::class, 'getProduct']);
-Route::get('/product/{id}', [ProductController::class, 'getProductId']);
-Route::put('/product/{id}', [ProductController::class, 'editProduct']);
-
-Route::post('/createProduct', [ProductController::class, 'create']);
-
+// Rutas de Producto
+Route::get('/products', [ProductController::class, 'getProduct'])->middleware('auth:sanctum')->name('products');
+Route::get('/product/{id}', [ProductController::class, 'getProductId'])->middleware('auth:sanctum')->name('getProduct');
+Route::put('/product/{id}', [ProductController::class, 'editProduct'])->middleware('auth:sanctum')->name('UpdateProduct');
+Route::post('/createProduct', [ProductController::class, 'create'])->middleware('auth:sanctum')->name('createProduct');
 Route::get('/categories', [CategoryController::class, 'index']);
+
+// Obtencion de departamentos y muncipios
 Route::get('/departments', [DepartmentsControllers::class, 'index']);
 Route::get('/municipalities', [MunicipalityControllers::class, 'index']);
 
-Route::post('/createDirection', [DirectionController::class, 'store']);
