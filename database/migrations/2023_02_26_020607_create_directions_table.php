@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Direction;
 
 return new class extends Migration
 {
@@ -16,9 +17,33 @@ return new class extends Migration
             $table->tinyInteger('departmentIdFK')->unsigned();
             $table->smallInteger('municipalityIdFK')->unsigned();
             $table->string('description')->nullable();
-            $table->bigInteger('userIdFK')->nullable(false)->unsigned();
+            $table->bigInteger('userIdFK')->unsigned();
             $table->timestamps();
         });
+
+        Direction::create([
+            'departmentIdFK' => '01',
+            'municipalityIdFK' => '01',
+            'userIdFK' => '1'
+        ]);
+
+        Direction::create([
+            'departmentIdFK' => '01',
+            'municipalityIdFK' => '01',
+            'userIdFK' => '2'
+        ]);
+
+        Direction::create([
+            'departmentIdFK' => '01',
+            'municipalityIdFK' => '01',
+            'userIdFK' => '3'
+        ]);
+
+        Direction::create([
+            'departmentIdFK' => '01',
+            'municipalityIdFK' => '01',
+            'userIdFK' => '4'
+        ]);
     }
 
     /**
