@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 return new class extends Migration
 {
@@ -15,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('firstName', 80);
             $table->string('lastName', 80);
-            $table->string('dni', 15);
+            $table->string('dni', 15)->unique();
             $table->string('email')->unique();
-            $table->string('phoneNumber')->unique();
+            $table->string('phoneNumber');
             $table->timestamp('birthDate');
             $table->string('password');
             $table->boolean('isAdmin')->default(0);
@@ -30,6 +32,70 @@ return new class extends Migration
             $table->timestamp('updated_at')->nullable();
             $table->rememberToken()->nullable();
         });
+
+        // Creacion de usuario Administrator
+        User::create([
+            'firstName' => 'admin',
+            'lastName' => 'admin',
+            'dni' => '0000-0000-00000',
+            'noexiste@noexiste.com',
+            'phoneNumber' => '00000000',
+            'birthDate' => '2023-01-01',
+            'password' => Hash::make('Admin1234*'),
+            'isAdmin' => '1',
+            'isClient' => '0',
+            'isSeller' => '0',
+            'isBanned' => '0',
+            'isEnabled' => '1'
+        ]);
+
+        // Creacion de usuario Cliente
+        User::create([
+            'firstName' => 'Cliente',
+            'lastName' => 'Cliente',
+            'dni' => '0000-0000-00001',
+            'clienteestrella@noexiste.com',
+            'phoneNumber' => '00000000',
+            'birthDate' => '2023-01-01',
+            'password' => Hash::make('Cliente1234*'),
+            'isAdmin' => '0',
+            'isClient' => '1',
+            'isSeller' => '0',
+            'isBanned' => '0',
+            'isEnabled' => '1'
+        ]);
+
+        // Creacion de usuario Vendedor
+        User::create([
+            'firstName' => 'Vendedor',
+            'lastName' => 'Vendedor',
+            'dni' => '0000-0000-00002',
+            'vendedorestrella@noexiste.com',
+            'phoneNumber' => '00000000',
+            'birthDate' => '2023-01-01',
+            'password' => Hash::make('Vendedor1234*'),
+            'isAdmin' => '0',
+            'isClient' => '1',
+            'isSeller' => '1',
+            'isBanned' => '0',
+            'isEnabled' => '1'
+        ]);
+
+        // Creacion de usuario Banneado
+        User::create([
+            'firstName' => 'Banneado',
+            'lastName' => 'Banneado',
+            'dni' => '0000-0000-00003',
+            'banneado@noexiste.com',
+            'phoneNumber' => '00000000',
+            'birthDate' => '2023-01-01',
+            'password' => Hash::make('Banneado1234*'),
+            'isAdmin' => '0',
+            'isClient' => '1',
+            'isSeller' => '1',
+            'isBanned' => '1',
+            'isEnabled' => '1'
+        ]);
     }
 
     /**
