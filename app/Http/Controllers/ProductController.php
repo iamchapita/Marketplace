@@ -4,15 +4,49 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
+use function PHPSTORM_META\type;
+
 class ProductController extends Controller
 {
 
-    protected function storeImages($request, $mode = 'store')
+    protected function base64Encode(Int $id)
+    {
+
+        // Ruta de guardado de imagenes
+        $path = 'products/' . $id;
+
+        if (!Storage::disk('public')->exists($path)) {
+            return response()->json(['message' => 'No existen Imágenes de este Producto'], 400);
+        } else {
+            $encodedFiles = [];
+            $files = Storage::disk('public')->files($path);
+
+            foreach($files as $file){
+                // Se obtiene el contenido del archivo
+                $content = Storage::disk('public')->get($file);
+
+                // Se obtiene el nombre del archivo
+                $name = explode('/', $file);
+                $name = $name[count($name)-1];
+
+                // Obteniendo el arreglo del nombre y el contenido del archivo
+                $fileReponse = array(
+                    'name' => $name,
+                    'base64Image' => base64_encode($content)
+                );
+
+                array_push($encodedFiles, $fileReponse);
+            }
+
+            return response()->json($encodedFiles, 200);
+        }
+    }
+
+    protected function base64Decode($request, $mode = 'store')
     {
 
         // Obteniendo los productos almacenados en la base de datos
@@ -131,17 +165,15 @@ class ProductController extends Controller
      */
     public function create(Request $request)
     {
-
         $validator = $this->validateData($request);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()]);
         } else {
 
-
             // Sobreescribe el campos photos enviados desde el frontend para almacenar
             // la ruta donde se guardaron las imagenes en la BD.
-            $path = $this->storeImages($request, 'store');
+            $path = $this->base64Decode($request, 'store');
             $request->merge(['photos' => $path]);
 
             if ($request['photos'] == false) {
@@ -166,7 +198,7 @@ class ProductController extends Controller
     /**
      *
      */
-    public function getProductId($id)
+    public function getProductById(Int $id)
     {
         $product = product::find($id);
         if (is_null($product)) {
