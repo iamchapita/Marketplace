@@ -29,10 +29,13 @@ Route::post('/createDirection', [DirectionController::class, 'store'])->name('cr
 Route::get('/user', [UserController::class, 'user'])->middleware('auth:sanctum')->name('user');
 
 // Rutas de Producto
-Route::get('/products', [ProductController::class, 'getProduct'])->middleware('auth:sanctum')->name('products');
-Route::get('/product/{id}', [ProductController::class, 'getProductId'])->middleware('auth:sanctum')->name('getProduct');
+Route::get('/products', [ProductController::class, 'getProduct'])->name('products');
+Route::get('/product/{id}', [ProductController::class, 'getProductById'])->name('getProduct');
 Route::put('/product/{id}', [ProductController::class, 'editProduct'])->middleware('auth:sanctum')->name('UpdateProduct');
-Route::post('/createProduct', [ProductController::class, 'create'])->middleware('auth:sanctum')->name('createProduct');
+
+// Route::post('/createProduct', [ProductController::class, 'create'])->middleware('auth:sanctum')->name('createProduct');
+Route::post('/createProduct', [ProductController::class, 'create'])->name('createProduct');
+
 Route::get('/categories', [CategoryController::class, 'index']);
 
 // Obtencion de departamentos y muncipios
