@@ -42,3 +42,7 @@ Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/departments', [DepartmentsControllers::class, 'index']);
 Route::get('/municipalities', [MunicipalityControllers::class, 'index']);
 
+// Lista de Deseos
+Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+Route::post('/wishlist', [WishlistController::class, 'store'])->name('wishlist.store');
+Route::delete('/wishlist/{product}', [WishlistController::class, 'delete'])->name('wishlist.delete');

@@ -7,14 +7,40 @@ use Illuminate\Http\Request;
 
 class WishListController extends Controller
 {
+    
     /**
-     * Display a listing of the resource.
+     *  lista productos en la lista de deseos.
      */
     public function index()
     {
-        //
+        $wishlist = Auth::user()->wishlist;
+        $products = $wishlist->products;
+
+        return view('wishlist.index', compact('products'));
     }
 
+    /**
+     * guardar un producto en la lista a la vez.
+     */
+    public function store(Product $product)
+    {
+        Auth::user()->wishlist->products()->attach($product);
+    
+        return redirect()->route('wishlist.index');
+    }
+
+    /**
+     * eliminar un producto de la lista.
+     */
+    public function delete(Product $product)
+    {
+    Auth::user()->wishlist->products()->detach($product);
+
+    return redirect()->route('wishlist.index');
+    }
+
+
+/******************************************************************/
     /**
      * Show the form for creating a new resource.
      */
@@ -23,13 +49,8 @@ class WishListController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+   
+    
 
     /**
      * Display the specified resource.
