@@ -15,9 +15,10 @@ class WishListController extends Controller
     {
         $wishlist = Auth::user()->wishlist;
         $products = $wishlist->products;
-
-        return view('wishlist.index', compact('products'));
+    
+        return response()->json(['data' => $products]);
     }
+    
 
     /**
      * guardar un producto en la lista a la vez.
@@ -26,19 +27,20 @@ class WishListController extends Controller
     {
         Auth::user()->wishlist->products()->attach($product);
     
-        return redirect()->route('wishlist.index');
+        return response()->json(['data' => $product], 201);
     }
+    
 
     /**
      * eliminar un producto de la lista.
      */
     public function delete(Product $product)
     {
-    Auth::user()->wishlist->products()->detach($product);
-
-    return redirect()->route('wishlist.index');
+        Auth::user()->wishlist->products()->detach($product);
+    
+        return response()->json([], 204);
     }
-
+    
 
 /******************************************************************/
     /**
