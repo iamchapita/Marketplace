@@ -33,8 +33,7 @@ Route::get('/products', [ProductController::class, 'getProduct'])->name('product
 Route::get('/product/{id}', [ProductController::class, 'getProductById'])->name('getProduct');
 Route::put('/product/{id}', [ProductController::class, 'editProduct'])->middleware('auth:sanctum')->name('UpdateProduct');
 
-// Route::post('/createProduct', [ProductController::class, 'create'])->middleware('auth:sanctum')->name('createProduct');
-Route::post('/createProduct', [ProductController::class, 'create'])->name('createProduct');
+Route::post('/createProduct', [ProductController::class, 'create'])->middleware('auth:sanctum')->name('createProduct');
 
 Route::get('/categories', [CategoryController::class, 'index']);
 
