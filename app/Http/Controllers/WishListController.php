@@ -11,12 +11,14 @@ class WishListController extends Controller
     /**
      *  lista productos en la lista de deseos.
      */
-    public function index()
+    public function index($id)
     {
-        $wishlist = Auth::user()->wishlist;
+       /* $wishlist = Auth::user()->wishlist;
         $products = $wishlist->products;
-    
-        return response()->json(['data' => $products]);
+    findall
+        return response()->json(['data' => $products]);*/
+
+        return response()->json(WishList::find( $id,'userIdFK'));
     }
     
 
