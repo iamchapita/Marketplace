@@ -13,7 +13,12 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-        return $categories;
+
+        if ($categories->isEmpty()) {
+            return response()->json(['message' => 'La Tabla de Categorias está vacía.'], 500);
+        } else {
+            return response()->json($categories);
+        }
     }
 
     /**
