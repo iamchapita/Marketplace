@@ -7,8 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-
-use function PHPSTORM_META\type;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -49,15 +48,8 @@ class ProductController extends Controller
     protected function base64Decode($request, $mode = 'store')
     {
 
-        // Obteniendo los productos almacenados en la base de datos
-        $id = $id = DB::selectOne('select count(*) as id from products')->id;
-
-        if ($mode == 'store') {
-            $id = $id + 1;
-        }
-
         // Ruta a guardar crear y a almacenar
-        $path = 'products/' . $id;
+        $path = 'products/' . Str::random(15);
 
         // Se confirma si la carpeta para el producto existe, de no ser así
         // se crea
@@ -71,18 +63,12 @@ class ProductController extends Controller
         if ($images) {
 
             for ($i = 0; $i <  count(array_keys($images)); $i++) {
-                // Obteniendo la extension del archivo y la imagen en base64
-                $parts = explode(',', (string)$images[$i]['base64Image']);
-                $extension = explode('/', (string)$parts[0]);
-                $extension = explode(';', (string)$extension[1]);
-                $extension = $extension[0];
-                if ($extension)
-                    // Se obtiene la imagen en base64
-                    $base64_image = $parts[1];
-                // Se obtiene el nombre de la imagen (incluye extension)
-                $imageName = (string)$images[$i]['name'];
+
+                // Obteniendo el nombre del archivo y la imagen en base64
+                $imageName = $images[$i]['name'];
+                $base64_image = $images[$i]['base64Image'];
                 // Se almacena el archivo en la ruta
-                Storage::disk('public')->put($path . '/' . $imageName . '.' . $extension, base64_decode($base64_image));
+                Storage::disk('public')->put($path . '/' . $imageName, base64_decode($base64_image));
             }
             return $path;
         }
@@ -109,12 +95,12 @@ class ProductController extends Controller
 
         // Estableciendo reglas de cada campo respectivamente
         $rules = array(
-            $keys[0] => ['required', 'string', 'max:255', 'regex:/([\w \,\+\-\/\#\$\(\)]+)/'],
-            $keys[1] => ['max:255', 'string', 'regex:/([a-zA-Z \.\(\)0-9 \, \:\-\+\=\!\$\%\&\*\?\"\"\{\}\n\<\>\?\¿]+)/'],
-            $keys[2] => ['required', 'numeric', 'min:0', 'regex:/(0\.((0[1-9]{1})|([1-9]{1}([0-9]{1})?)))|(([1-9]+[0-9]*)(\.([0-9]{1,2}))?)/'],
+            $keys[0] => ['required', 'string', 'max:255'],
+            $keys[1] => ['max:255', 'string'],
+            $keys[2] => ['required', 'numeric', 'min:0'],
             $keys[3] => ['required'],
             $keys[4] => ['required', 'max:20', 'string', 'in:Usado,Nuevo'],
-            $keys[5] => ['required', 'between:0,1', 'numeric'],
+            $keys[5] => ['required', 'numeric'],
             $keys[6] => ['required', 'numeric']
         );
 
@@ -130,7 +116,6 @@ class ProductController extends Controller
         );
 
         if (count($keys) > 7) {
-
             // Esyableciendo nombre personalizado a los campos
             $customAttributes[$keys[7]] = 'Disponible';
             $customAttributes[$keys[8]] = 'Baneado';
@@ -177,11 +162,11 @@ class ProductController extends Controller
             $request->merge(['photos' => $path]);
 
             if ($request['photos'] == false) {
-                return response()->json(['error' => 'Error en las imagenes']);
+                return response()->json(['error' => 'Error en las imagenes'], 500);
             } else {
                 $values = $request->all();
-                DB::table('products')->insert($values);
-                return response()->json(['message' => 'Insercion Completa']);
+                Product::insert($values);
+                return response()->json(['message' => 'Insercion Completa'], 200);
             }
         }
     }
