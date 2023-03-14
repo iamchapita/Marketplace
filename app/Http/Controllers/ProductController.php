@@ -153,7 +153,7 @@ class ProductController extends Controller
         $validator = $this->validateData($request);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()]);
+            return response()->json(['error' => $validator->errors()], 500);
         } else {
 
             // Sobreescribe el campos photos enviados desde el frontend para almacenar
