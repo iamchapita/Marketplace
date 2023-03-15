@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Direction;
+use App\Models\Municipality;
 
 class UserController extends Controller
 {
@@ -124,7 +127,25 @@ class UserController extends Controller
         return response()->json(['message' => 'Cierre de Sesión Completo'], 200);
     }
 
-    public function user(Request $request){
+    public function user(Request $request)
+    {
         return $request->user()->only('id');
+    }
+
+    public function getSellerDetails(Request $request)
+    {
+        $user = User::where('id', $request->only('id'))->firstOrFail();
+        $direction = Direction::find($request->only('id'))->firstOrFail();
+        $department = Department::find($direction['departmentIdFK']);
+        $municipality = Municipality::find($direction['departmentIdFK']);
+
+        return response()->json(
+            [
+                'userIdFK' => $user['id'],
+                'name' => $user['firstName'] . ' ' . $user['lastName'],
+                'direction' => $municipality['name'] . ', ' . $department['name']
+            ],
+            200
+        );
     }
 }
