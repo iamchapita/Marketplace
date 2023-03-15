@@ -29,7 +29,7 @@ Route::post('/createDirection', [DirectionController::class, 'store'])->name('cr
 Route::get('/user', [UserController::class, 'user'])->middleware('auth:sanctum')->name('user');
 
 // Rutas de Producto
-Route::get('/products', [ProductController::class, 'getProduct'])->name('products');
+Route::get('/products', [ProductController::class, 'getProducts'])->name('products');
 Route::get('/product/{id}', [ProductController::class, 'getProductById'])->name('getProduct');
 Route::put('/product/{id}', [ProductController::class, 'editProduct'])->middleware('auth:sanctum')->name('UpdateProduct');
 
