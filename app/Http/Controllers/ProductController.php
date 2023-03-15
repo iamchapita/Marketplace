@@ -193,7 +193,7 @@ class ProductController extends Controller
         $product = product::find($id);
 
         if (is_null($product)) {
-            return response()->json(['message' => 'Producto no encontrado']);
+            return response()->json(['message' => 'Producto no encontrado'], 404);
         }
 
         $path = $product['photos'];
