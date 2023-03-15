@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class WishList extends Model
 {
     use HasFactory;
+    public function products()
+    {
+        //Relacion de la clase Producto
+        return $this->belongsToMany(Product::class);
+    }
 }

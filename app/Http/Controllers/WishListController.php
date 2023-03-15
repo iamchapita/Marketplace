@@ -25,12 +25,33 @@ class WishListController extends Controller
     /**
      * guardar un producto en la lista a la vez.
      */
-    public function store(Product $product)
+    public function store(Request $request)
     {
-        Auth::user()->wishlist->products()->attach($product);
-    
-        return response()->json(['data' => $product], 201);
+        $productId=$request->input('product_id');
+        $userId=auth()->user()->id;
+
+            // Busca si ya existe una lista de deseos para el usuario actual
+    $wishList = WishList::where('userIdFK', $userId)->first();
+    if (!$wishList) {
+        // Si no existe, crea una nueva lista de deseos para el usuario actual
+        $wishList = new WishList();
+        $wishList->userIdFK = $userId;
+        $wishList->addedDate = now();
+        $wishList->save();
     }
+    // Busca si el producto ya está en la lista de deseos del usuario actual
+    $productWishList = ProductWishList::where('product_id', $productId)->where('wish_list_id', $wishList->id)->first();
+    if (!$productWishList) {
+        // Si el producto no está en la lista de deseos, lo agrega
+        $productWishList = new ProductWishList();
+        $productWishList->product_id = $productId;
+        $productWishList->wish_list_id = $wishList->id;
+        $productWishList->save();
+    }
+
+    return response()->json(['success' => true]);
+    }
+
     
 
     /**
