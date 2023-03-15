@@ -172,9 +172,17 @@ class ProductController extends Controller
      * Show list product.
      *
      */
-    public function getProduct()
+    public function getProducts()
     {
-        return response()->json(product::all());
+        $products = product::all();
+
+        foreach($products as $key => $product){
+            $path = $product['photos'];
+            $product['photos'] = $this->base64Encode($path);
+            $products[$key] = $product;
+        }
+
+        return response()->json([$products], 200);
     }
 
     /**
