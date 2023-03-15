@@ -6,8 +6,9 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DepartmentsControllers;
 use App\Http\Controllers\MunicipalityControllers;
 use App\Http\Controllers\DirectionController;
+use App\Http\Controllers\WishListController;
 use Illuminate\Support\Facades\Route;
-use Laravel\Sanctum\Http\Controllers;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -42,6 +43,6 @@ Route::get('/departments', [DepartmentsControllers::class, 'index']);
 Route::get('/municipalities', [MunicipalityControllers::class, 'index']);
 
 // Lista de Deseos
-Route::get('/wishlist/{id}', [WishListController::class, 'index']);
-Route::post('/wishlist', [WishlistController::class, 'store'])->name('wishlist.store');
-Route::delete('/wishlist/{product}', [WishlistController::class, 'delete'])->name('wishlist.delete');
+Route::get('/wishlist', [WishListController::class, 'index']);
+Route::post('/wishlistInsert', [WishlistController::class, 'store'])->name('wishlist.store');
+Route::post('/wishlistDelete', [WishlistController::class, 'delete'])->name('wishlist.delete');
