@@ -12,11 +12,8 @@ use Illuminate\Support\Str;
 class ProductController extends Controller
 {
 
-    protected function base64Encode(Int $id)
+    protected function base64Encode($path)
     {
-
-        // Ruta de guardado de imagenes
-        $path = 'products/' . $id;
 
         if (!Storage::disk('public')->exists($path)) {
             return response()->json(['message' => 'No existen Imágenes de este Producto'], 400);
@@ -41,7 +38,7 @@ class ProductController extends Controller
                 array_push($encodedFiles, $fileReponse);
             }
 
-            return response()->json($encodedFiles, 200);
+            return $encodedFiles;
         }
     }
 
@@ -186,10 +183,14 @@ class ProductController extends Controller
     public function getProductById(Int $id)
     {
         $product = product::find($id);
+
         if (is_null($product)) {
             return response()->json(['message' => 'Producto no encontrado']);
         }
-        return response()->json([$product, 200]);
+
+        $path = $product['photos'];
+        $product['photos'] = $this->base64Encode($path);
+        return response()->json([$product], 200);
     }
 
     /**
