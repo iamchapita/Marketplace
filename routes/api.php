@@ -26,23 +26,26 @@ Route::post('/login', [UserController::class, 'login'])->name('login');
 Route::get('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum')->name('logout');
 Route::post('/createDirection', [DirectionController::class, 'store'])->name('createDirection');
 
-// Obtiene el usuario Autenticado
+// Ruta de usuario Autenticado
 Route::get('/user', [UserController::class, 'user'])->middleware('auth:sanctum')->name('user');
+
+// Ruta de Detalles de Usuario Vendedor
+Route::post('/sellerDetails', [UserController::class, 'getSellerDetails']);
 
 // Rutas de Producto
 Route::get('/products', [ProductController::class, 'getProducts'])->name('products');
 Route::get('/product/{id}', [ProductController::class, 'getProductById'])->name('getProduct');
 Route::put('/product/{id}', [ProductController::class, 'editProduct'])->middleware('auth:sanctum')->name('UpdateProduct');
-
 Route::post('/createProduct', [ProductController::class, 'create'])->middleware('auth:sanctum')->name('createProduct');
 
+// Ruta de Categorias
 Route::get('/categories', [CategoryController::class, 'index']);
 
-// Obtencion de departamentos y muncipios
+// Ruta de departamentos y muncipios
 Route::get('/departments', [DepartmentsControllers::class, 'index']);
 Route::get('/municipalities', [MunicipalityControllers::class, 'index']);
 
-// Lista de Deseos
+// Ruta de Lista de Deseos
 Route::get('/wishlist', [WishListController::class, 'index']);
 Route::post('/wishlistInsert', [WishlistController::class, 'store'])->name('wishlist.store');
 Route::post('/wishlistDelete', [WishlistController::class, 'delete'])->name('wishlist.delete');
