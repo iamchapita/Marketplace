@@ -23,6 +23,7 @@ class WishListController extends Controller
      */
     public function store(Request $request)
     {
+        $request->merge(['addedDate' => date('Y-m-d')]);
         $values =  $request->all();
         WishList::insert($values);
 
