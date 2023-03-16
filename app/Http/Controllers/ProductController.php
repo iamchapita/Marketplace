@@ -172,7 +172,7 @@ class ProductController extends Controller
      * Show list product.
      *
      */
-    public function getProduct()
+    public function getProducts()
     {
         $products = product::all();
 
