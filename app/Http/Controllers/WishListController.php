@@ -11,10 +11,13 @@ class WishListController extends Controller
     /**
      *  Obtencion de todos las listas de deseos.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $wishlist = WishList::all();
-        return response()->json([$wishlist], 200);
+
+        $useridFK = $request->get('userIdFK');
+        $wishlist = WishList::where('userIdFK', $useridFK)->get();
+
+        return response()->json($wishlist, 200);
     }
 
 

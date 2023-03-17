@@ -47,6 +47,6 @@ Route::get('/departments', [DepartmentsControllers::class, 'index']);
 Route::get('/municipalities', [MunicipalityControllers::class, 'index']);
 
 // Ruta de Lista de Deseos
-Route::get('/wishlist', [WishListController::class, 'index']);
-Route::post('/wishlistInsert', [WishlistController::class, 'store'])->name('wishlist.store');
-Route::post('/wishlistDelete', [WishlistController::class, 'delete'])->name('wishlist.delete');
+Route::post('/wishlist', [WishListController::class, 'index'])->name('getWishlist');
+Route::post('/wishlistInsert', [WishlistController::class, 'store'])->name('wishlistStore');
+Route::post('/wishlistDelete', [WishlistController::class, 'delete'])->name('wishlistDelete');
