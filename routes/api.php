@@ -33,6 +33,7 @@ Route::get('/user', [UserController::class, 'user'])->middleware('auth:sanctum')
 Route::post('/sellerDetails', [UserController::class, 'getSellerDetails']);
 
 // Rutas de Producto
+Route::post('/getProductImages', [ProductController::class, 'getProductImages'])->name('productImages');
 Route::get('/products', [ProductController::class, 'getProducts'])->name('products');
 Route::get('/product/{id}', [ProductController::class, 'getProductById'])->name('getProduct');
 Route::put('/product/{id}', [ProductController::class, 'editProduct'])->middleware('auth:sanctum')->name('UpdateProduct');

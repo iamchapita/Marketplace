@@ -21,13 +21,13 @@ class ProductController extends Controller
             $encodedFiles = [];
             $files = Storage::disk('public')->files($path);
 
-            foreach($files as $file){
+            foreach ($files as $file) {
                 // Se obtiene el contenido del archivo
                 $content = Storage::disk('public')->get($file);
 
                 // Se obtiene el nombre del archivo
                 $name = explode('/', $file);
-                $name = $name[count($name)-1];
+                $name = $name[count($name) - 1];
 
                 // Obteniendo el arreglo del nombre y el contenido del archivo
                 $fileReponse = array(
@@ -168,6 +168,21 @@ class ProductController extends Controller
         }
     }
 
+    /*
+    Obtiene las imagenes de los productos
+    */
+    public function getProductImages(Request $request)
+    {
+
+        $path = $request->get('path');
+
+        if ($path == 'false') {
+            return response()->json(['message' => 'No se han encontrado imagenes del producto'], 400);
+        }
+
+        return $this->base64Encode($path);
+    }
+
     /**
      * Show list product.
      *
@@ -176,13 +191,7 @@ class ProductController extends Controller
     {
         $products = product::all();
 
-        foreach($products as $key => $product){
-            $path = $product['photos'];
-            $product['photos'] = $this->base64Encode($path);
-            $products[$key] = $product;
-        }
-
-        return response()->json([$products], 200);
+        return response()->json($products, 200);
     }
 
     /**
@@ -196,14 +205,7 @@ class ProductController extends Controller
             return response()->json(['message' => 'Producto no encontrado'], 404);
         }
 
-        $path = $product['photos'];
-        $product['photos'] = $this->base64Encode($path);
-
-        if (!$product['photos']){
-            return response()->json(['message' => 'No se han encontrado imagenes del producto'], 400);
-        }
-
-        return response()->json([$product], 200);
+        return response()->json($product, 200);
     }
 
     /**
