@@ -16,7 +16,7 @@ class ProductController extends Controller
     {
 
         if (!Storage::disk('public')->exists($path)) {
-            return response()->json(['message' => 'No existen Imágenes de este Producto'], 400);
+            return false;
         } else {
             $encodedFiles = [];
             $files = Storage::disk('public')->files($path);
@@ -198,6 +198,11 @@ class ProductController extends Controller
 
         $path = $product['photos'];
         $product['photos'] = $this->base64Encode($path);
+
+        if (!$product['photos']){
+            return response()->json(['message' => 'No se han encontrado imagenes del producto'], 400);
+        }
+
         return response()->json([$product], 200);
     }
 
