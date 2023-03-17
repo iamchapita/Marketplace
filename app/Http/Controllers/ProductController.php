@@ -175,12 +175,13 @@ class ProductController extends Controller
     {
 
         $path = $request->get('path');
+        $path = $this->base64Encode($path);
 
-        if ($path == 'false') {
+        if ($path == false) {
             return response()->json(['message' => 'No se han encontrado imagenes del producto'], 400);
         }
 
-        return $this->base64Encode($path);
+        return response()->json($path, 200);
     }
 
     /**
