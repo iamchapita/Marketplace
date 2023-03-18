@@ -15,7 +15,17 @@ class WishListController extends Controller
     {
 
         $useridFK = $request->get('userIdFK');
-        $wishlist = WishList::where('userIdFK', $useridFK)->get();
+        $wishlist = WishList::join('products', 'products.id', '=', 'wish_lists.productIdFK')
+            ->join('users', 'users.id', '=', 'wish_lists.userIdFK')
+            ->where('wish_lists.userIdFK', $useridFK)
+            ->select(
+                'products.id',
+                'products.name',
+                'products.price',
+                'products.photos',
+                'users.firstName as userFirstName',
+                'users.lastName as userLastName'
+            )->get();
 
         return response()->json($wishlist, 200);
     }
