@@ -194,6 +194,9 @@ class ProductController extends Controller
     {
         $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
             ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
+            ->join('directions', 'directions.userIdFK', '=', 'products.userIdFK')
+            ->join('departments', 'departments.id', '=', 'directions.departmentIdFK')
+            ->join('municipalities', 'municipalities.id', '=', 'directions.municipalityIdFK')
             ->select(
                 'products.id',
                 'products.name',
@@ -208,6 +211,8 @@ class ProductController extends Controller
                 'categories.name as categoryName',
                 'users.firstName as userFirstName',
                 'users.lastName as userLastName',
+                'departments.name as departmentName',
+                'municipalities.name as municipalityName'
             )
             ->get();
 
@@ -222,7 +227,9 @@ class ProductController extends Controller
 
         $product = Product::join('users', 'users.id', '=', 'products.userIdFK')
             ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
-            ->where('products.id', '=', $id)
+            ->join('directions', 'directions.userIdFK', '=', 'products.userIdFK')
+            ->join('departments', 'departments.id', '=', 'directions.departmentIdFK')
+            ->join('municipalities', 'municipalities.id', '=', 'directions.municipalityIdFK')
             ->select(
                 'products.id',
                 'products.name',
@@ -237,10 +244,12 @@ class ProductController extends Controller
                 'categories.name as categoryName',
                 'users.firstName as userFirstName',
                 'users.lastName as userLastName',
+                'departments.name as departmentName',
+                'municipalities.name as municipalityName'
             )
-            ->get();
+            ->find($id);
 
-        if ($product->isEmpty()) {
+        if (is_null($product)) {
             return response()->json(['message' => 'Producto no encontrado'], 404);
         }
 
