@@ -186,6 +186,43 @@ class ProductController extends Controller
         return response()->json($path, 200);
     }
 
+    public function getProductsWithWishlistStatus(Int $userId)
+    {
+        $products = DB::table('products')
+            ->join('users', 'users.id', '=', 'products.userIdFK')
+            ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
+            ->join('directions', 'directions.userIdFK', '=', 'products.userIdFK')
+            ->join('departments', 'departments.id', '=', 'directions.departmentIdFK')
+            ->join('municipalities', 'municipalities.id', '=', 'directions.municipalityIdFK')
+            ->leftJoin('wish_lists', function ($join) use ($userId){
+                $join->on('wish_lists.productIdFK', '=', 'products.id')
+                    ->where('wish_lists.userIdFK', '=', $userId);
+            })
+            ->select(
+                'products.id',
+                'products.name',
+                'products.description',
+                'products.price',
+                'products.photos',
+                'products.status',
+                'products.isAvailable',
+                'products.isBanned',
+                'products.userIdFK',
+                'products.categoryIdFK',
+                DB::raw('IF(wish_lists.productIdFK IS NULL, FALSE, TRUE) as isProductInWishList'),
+                'categories.name as categoryName',
+                'users.firstName as userFirstName',
+                'users.lastName as userLastName',
+                'departments.name as departmentName',
+                'municipalities.name as municipalityName'
+            )
+            ->orderBy('products.id', 'ASC')
+            ->get();
+
+
+        return response()->json($products, 200);
+    }
+
     /**
      * Show list product.
      *
