@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+use function PHPUnit\Framework\isEmpty;
+
 class ProductController extends Controller
 {
 
@@ -209,7 +211,6 @@ class ProductController extends Controller
             )
             ->get();
 
-
         return response()->json($products, 200);
     }
 
@@ -218,9 +219,28 @@ class ProductController extends Controller
      */
     public function getProductById(Int $id)
     {
-        $product = product::find($id);
 
-        if (is_null($product)) {
+        $product = Product::join('users', 'users.id', '=', 'products.userIdFK')
+            ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
+            ->where('products.id', '=', $id)
+            ->select(
+                'products.id',
+                'products.name',
+                'products.description',
+                'products.price',
+                'products.photos',
+                'products.status',
+                'products.isAvailable',
+                'products.isBanned',
+                'products.userIdFK',
+                'products.categoryIdFK',
+                'categories.name as categoryName',
+                'users.firstName as userFirstName',
+                'users.lastName as userLastName',
+            )
+            ->get();
+
+        if ($product->isEmpty()) {
             return response()->json(['message' => 'Producto no encontrado'], 404);
         }
 
