@@ -190,7 +190,25 @@ class ProductController extends Controller
      */
     public function getProducts()
     {
-        $products = product::all();
+        $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
+            ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
+            ->select(
+                'products.id',
+                'products.name',
+                'products.description',
+                'products.price',
+                'products.photos',
+                'products.status',
+                'products.isAvailable',
+                'products.isBanned',
+                'products.userIdFK',
+                'products.categoryIdFK',
+                'categories.name as categoryName',
+                'users.firstName as userFirstName',
+                'users.lastName as userLastName',
+            )
+            ->get();
+
 
         return response()->json($products, 200);
     }
