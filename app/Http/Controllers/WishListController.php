@@ -23,8 +23,10 @@ class WishListController extends Controller
                 'products.name',
                 'products.price',
                 'products.photos',
+                'users.id as userIdFK',
                 'users.firstName as userFirstName',
                 'users.lastName as userLastName'
+
             )->get();
 
         return response()->json($wishlist, 200);
