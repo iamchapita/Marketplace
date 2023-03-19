@@ -36,7 +36,7 @@ Route::post('/sellerDetails', [UserController::class, 'getSellerDetails']);
 Route::post('/getProductImages', [ProductController::class, 'getProductImages'])->name('productImages');
 
 Route::get('/products', [ProductController::class, 'getProducts'])->name('products');
-Route::post('/productsWishList/{userId}', [ProductController::class, 'getProductsWithWishlistStatus']);
+Route::get('/productsWishList/{userId}', [ProductController::class, 'getProductsWithWishlistStatus']);
 
 Route::get('/product/{id}', [ProductController::class, 'getProductById'])->name('getProduct');
 Route::put('/product/{id}', [ProductController::class, 'editProduct'])->middleware('auth:sanctum')->name('UpdateProduct');
