@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\WishList;
 use Illuminate\Http\Request;
 
+use function PHPUnit\Framework\isEmpty;
+
 class WishListController extends Controller
 {
 
@@ -52,11 +54,17 @@ class WishListController extends Controller
      */
     public function delete(Request $request)
     {
-        $id = $request->only('id');
+        $userIdFK = $request->only('userIdFK');
+        $productIdFK = $request->only('productIdFK');
 
-        WishList::destroy($id);
+        $wishListObject = WishList::where('userIdFK', '=', $userIdFK)->where('productIdFK', '=', $productIdFK)->first();
 
-        return response()->json(['message' => 'Success'], 200);
+        if(!$wishListObject){
+            return response()->json(['message' => 'No se procesó la operación.'], 500);
+        }else{
+            $wishListObject->delete();
+            return response()->json(['message' => 'Se eliminó de la Lista de Deseos.'], 200);
+        }
     }
 
 
