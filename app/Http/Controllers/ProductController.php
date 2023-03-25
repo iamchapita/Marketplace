@@ -9,12 +9,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-use function PHPUnit\Framework\isEmpty;
-
 class ProductController extends Controller
 {
 
-    protected function base64Encode($path)
+    protected function base64Encode($path, $imagesToObtain)
     {
 
         if (!Storage::disk('public')->exists($path)) {
@@ -23,23 +21,31 @@ class ProductController extends Controller
             $encodedFiles = [];
             $files = Storage::disk('public')->files($path);
 
-            foreach ($files as $file) {
-                // Se obtiene el contenido del archivo
-                $content = Storage::disk('public')->get($file);
-
-                // Se obtiene el nombre del archivo
-                $name = explode('/', $file);
-                $name = $name[count($name) - 1];
-
-                // Obteniendo el arreglo del nombre y el contenido del archivo
-                $fileReponse = array(
-                    'name' => $name,
-                    'base64Image' => base64_encode($content)
-                );
-
-                array_push($encodedFiles, $fileReponse);
+            if ($imagesToObtain != 0) {
+                $count = intval($imagesToObtain);
+            } else {
+                $count = count($files);
             }
 
+            foreach ($files as $key => $file) {
+
+                if ($key < $count) {
+                    // Se obtiene el contenido del archivo
+                    $content = Storage::disk('public')->get($file);
+
+                    // Se obtiene el nombre del archivo
+                    $name = explode('/', $file);
+                    $name = $name[count($name) - 1];
+
+                    // Obteniendo el arreglo del nombre y el contenido del archivo
+                    $fileReponse = array(
+                        'name' => $name,
+                        'base64Image' => base64_encode($content)
+                    );
+
+                    array_push($encodedFiles, $fileReponse);
+                }
+            }
             return $encodedFiles;
         }
     }
@@ -175,9 +181,10 @@ class ProductController extends Controller
     */
     public function getProductImages(Request $request)
     {
-
         $path = $request->get('path');
-        $path = $this->base64Encode($path);
+        $imagesToObtain = $request->has('imagesToObtain') ? $request->get('imagesToObtain') : 0;
+
+        $path = $this->base64Encode($path, $imagesToObtain);
 
         if ($path == false) {
             return response()->json(['message' => 'No se han encontrado imagenes del producto'], 400);
@@ -194,7 +201,7 @@ class ProductController extends Controller
             ->join('directions', 'directions.userIdFK', '=', 'products.userIdFK')
             ->join('departments', 'departments.id', '=', 'directions.departmentIdFK')
             ->join('municipalities', 'municipalities.id', '=', 'directions.municipalityIdFK')
-            ->leftJoin('wish_lists', function ($join) use ($userId){
+            ->leftJoin('wish_lists', function ($join) use ($userId) {
                 $join->on('wish_lists.productIdFK', '=', 'products.id')
                     ->where('wish_lists.userIdFK', '=', $userId);
             })
@@ -298,7 +305,6 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-
     }
 
     /**
