@@ -17,15 +17,15 @@ class ProductController extends Controller
     protected function base64Encode($path)
     {
 
-        if (!Storage::disk('public')->exists($path)) {
+        if (!Storage::disk('s3')->exists($path)) {
             return false;
         } else {
             $encodedFiles = [];
-            $files = Storage::disk('public')->files($path);
+            $files = Storage::disk('s3')->files($path);
 
             foreach ($files as $file) {
                 // Se obtiene el contenido del archivo
-                $content = Storage::disk('public')->get($file);
+                $content = Storage::disk('s3')->get($file);
 
                 // Se obtiene el nombre del archivo
                 $name = explode('/', $file);
@@ -52,8 +52,8 @@ class ProductController extends Controller
 
         // Se confirma si la carpeta para el producto existe, de no ser así
         // se crea
-        if (!Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->makeDirectory($path);
+        if (!Storage::disk('s3')->exists($path)) {
+            Storage::disk('s3')->makeDirectory($path);
         }
 
         // Obteniendo el array de archivos enviados
@@ -67,7 +67,7 @@ class ProductController extends Controller
                 $imageName = $images[$i]['name'];
                 $base64_image = $images[$i]['base64Image'];
                 // Se almacena el archivo en la ruta
-                Storage::disk('public')->put($path . '/' . $imageName, base64_decode($base64_image));
+                Storage::disk('s3')->put($path . '/' . $imageName, base64_decode($base64_image));
             }
             return $path;
         }
@@ -298,7 +298,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
