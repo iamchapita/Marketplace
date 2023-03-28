@@ -129,7 +129,7 @@ class UserController extends Controller
 
     public function user(Request $request)
     {
-        return $request->user()->only('id');
+        return $request->user()->only('id', 'isAdmin', 'isClient', 'isSeller', 'isBanned', 'isEnabled');
     }
 
     public function getSellerDetails(Request $request)
