@@ -305,7 +305,12 @@ class ProductController extends Controller
     public function getProductsBySeller(Request $request){
 
         $sellerId = $request->get('sellerId');
-        $products = Product::where('products.userIdFK', '=', $sellerId)
+        $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
+            ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
+            ->join('directions', 'directions.userIdFK', '=', 'products.userIdFK')
+            ->join('departments', 'departments.id', '=', 'directions.departmentIdFK')
+            ->join('municipalities', 'municipalities.id', '=', 'directions.municipalityIdFK')
+            ->where('users.id', '=', $sellerId)
             ->select(
                 'products.id',
                 'products.name',
@@ -314,8 +319,14 @@ class ProductController extends Controller
                 'products.photos',
                 'products.status',
                 'products.isAvailable',
-                'products.isBanned'
-            )->get();
+                'products.isBanned',
+                'categories.name as categoryName',
+                'users.firstName as userFirstName',
+                'users.lastName as userLastName',
+                'departments.name as departmentName',
+                'municipalities.name as municipalityName'
+            )
+            ->get();
 
         if($products->isEmpty()){
             return response()->json(['message' => 'No se encontraron Productos'], 200);
