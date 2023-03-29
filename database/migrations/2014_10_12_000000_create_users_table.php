@@ -38,7 +38,7 @@ return new class extends Migration
             'firstName' => 'admin',
             'lastName' => 'admin',
             'dni' => '0000-0000-00000',
-            'email' => 'noexiste@noexiste.com',
+            'email' => 'admin@noexiste.com',
             'phoneNumber' => '00000000',
             'birthDate' => '2023-01-01',
             'password' => Hash::make('Admin1234*'),
