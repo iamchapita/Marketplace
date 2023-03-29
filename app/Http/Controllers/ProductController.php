@@ -170,7 +170,7 @@ class ProductController extends Controller
                 return response()->json(['error' => 'Error en las imagenes'], 500);
             } else {
                 $values = $request->all();
-                Product::insert($values);
+                Product::create($values);
                 return response()->json(['message' => 'Insercion Completa'], 200);
             }
         }
@@ -300,65 +300,7 @@ class ProductController extends Controller
         return response()->json($product, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-    }
+    public function filterProducts(Request $request){
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    // public function edit(Product $product)
-    // {
-    //
-    // }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, int $id)
-    {
-
-        //Para buscar por id los porductos
-        $product = Product::findOrFail($id);
-
-        $validator = $this->validateData($request);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()]);
-        } else {
-            //Actualizar Productos
-            $product->name = $request->input('name');
-            $product->description = $request->input('description');
-            $product->price = $request->input('price');
-            $product->photos = $request->input('photos');
-            $product->isAvailable = $request->input('isAvailable');
-            $product->isBanned = $request->input('isBanned');
-            $product->userIdFK = $request->input('userIdFK');
-            $product->categoryIdFK = $request->input('categoryIdFK');
-            $product->save();
-        }
-
-
-        // Redirigir a la lista de productos con un mensaje de éxito
-        return response()->json(['message' => ''], 200);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Product $product)
-    {
-        //
     }
 }
