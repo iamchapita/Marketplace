@@ -53,3 +53,7 @@ Route::get('/municipalities', [MunicipalityControllers::class, 'index']);
 Route::post('/wishlist', [WishListController::class, 'index'])->name('getWishlist');
 Route::post('/wishlistInsert', [WishlistController::class, 'store'])->name('wishlistStore');
 Route::post('/wishlistDelete', [WishlistController::class, 'delete'])->name('wishlistDelete');
+
+
+
+Route::post('/productst', [ProductController::class, 'getProductst'])->name('productst');

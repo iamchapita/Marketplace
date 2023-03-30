@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+use App\Http\Controllers\Controller;
+use Illuminate\View\View;
+
 class ProductController extends Controller
 {
 
@@ -258,7 +261,7 @@ class ProductController extends Controller
                 'departments.name as departmentName',
                 'municipalities.name as municipalityName'
             )
-            ->get();
+            ->paginate(2);
 
         return response()->json($products, 200);
     }
@@ -291,7 +294,9 @@ class ProductController extends Controller
                 'departments.name as departmentName',
                 'municipalities.name as municipalityName'
             )
-            ->find($id);
+            ->find($id)
+            ->paginate(8);
+
 
         if (is_null($product)) {
             return response()->json(['message' => 'Producto no encontrado'], 404);
@@ -299,6 +304,7 @@ class ProductController extends Controller
 
         return response()->json($product, 200);
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -360,5 +366,48 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+    }
+    public function getProductst(Request $request)
+    {
+        $id = $request["id"];
+        $page = $request["page"];
+        $category = $request["category"];
+        $department = $request["department"];
+        $id = "%".$id."%";
+        $category = "%".$category."%";
+        $department = "%".$department."%";
+        if(intval($page) == 1){
+            $ini = 0;
+            $fin = 8;
+        }else{
+            $fin = 8*$page;
+            $ini = $fin-8;
+        }
+
+        $products = DB::select("SELECT p.id,
+        p.name,
+        p.description,
+        p.price,
+        p.photos,
+        p.status ,
+        p.isAvailable,
+        p.isBanned ,
+        p.userIdFk,
+        c.name  categoryName ,
+        de.name departmentName,
+        u.firstName userFirstName,
+        u.lastName  userLastName,
+        m.name municipalityName,
+        IF(w.productIdFK IS NULL, FALSE, TRUE) isProductInWishList
+        FROM `marketplace-db`.products p
+        INNER JOIN `marketplace-db`.categories c ON p.categoryIdFK  = c.id
+        INNER JOIN  `marketplace-db`.users u ON p.userIdFK = u.id
+        INNER JOIN `marketplace-db`.directions d ON u.id = d.userIdFK
+        INNER JOIN `marketplace-db`.departments de ON de.id = d.departmentIdFK
+        INNER JOIN `marketplace-db`.municipalities m ON m.id = d.municipalityIdFK
+        LEFT JOIN `marketplace-db`.wish_lists w ON w.productIdFK = p.id
+        WHERE c.name LIKE '$category' AND de.name LIKE '$department' ORDER BY p.created_at DESC  LIMIT $ini, $fin
+        ;");
+        return response()->json($products, 200);
     }
 }
