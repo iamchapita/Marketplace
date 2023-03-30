@@ -392,8 +392,6 @@ class ProductController extends Controller
         $page = $request["page"];
         $category = $request["category"];
         $department = $request["department"];
-        $pricemin = $request["pricemin"];
-        $pricemax = $request["pricemax"];
         $id = "%".$id."%";
         $category = "%".$category."%";
         $department = "%".$department."%";
@@ -413,32 +411,69 @@ class ProductController extends Controller
             $fin = 8*$page;
             $ini = $fin-8;
         }
+        if($request['pricemin']==0 && $request['pricemax']==0 ){
+            $products = DB::select("SELECT p.id,
+            p.name,
+            p.description,
+            p.price,
+            p.photos,
+            p.status ,
+            p.isAvailable,
+            p.isBanned ,
+            p.userIdFk,
+            c.name  categoryName ,
+            de.name departmentName,
+            u.firstName userFirstName,
+            u.lastName  userLastName,
+            m.name municipalityName,
+            IF(w.productIdFK IS NULL, FALSE, TRUE) isProductInWishList
+            FROM `marketplace-db`.products p
+            INNER JOIN `marketplace-db`.categories c ON p.categoryIdFK  = c.id
+            INNER JOIN  `marketplace-db`.users u ON p.userIdFK = u.id
+            INNER JOIN `marketplace-db`.directions d ON u.id = d.userIdFK
+            INNER JOIN `marketplace-db`.departments de ON de.id = d.departmentIdFK
+            INNER JOIN `marketplace-db`.municipalities m ON m.id = d.municipalityIdFK
+            LEFT JOIN `marketplace-db`.wish_lists w ON w.userIdFK = '$id'
+            WHERE c.id LIKE '$category' AND de.id LIKE '$department'
+            ORDER BY p.created_at DESC
+            ;");
+            return response()->json($products, 200);
 
-        $products = DB::select("SELECT p.id,
-        p.name,
-        p.description,
-        p.price,
-        p.photos,
-        p.status ,
-        p.isAvailable,
-        p.isBanned ,
-        p.userIdFk,
-        c.name  categoryName ,
-        de.name departmentName,
-        u.firstName userFirstName,
-        u.lastName  userLastName,
-        m.name municipalityName,
-        IF(w.productIdFK IS NULL, FALSE, TRUE) isProductInWishList
-        FROM `marketplace-db`.products p
-        INNER JOIN `marketplace-db`.categories c ON p.categoryIdFK  = c.id
-        INNER JOIN  `marketplace-db`.users u ON p.userIdFK = u.id
-        INNER JOIN `marketplace-db`.directions d ON u.id = d.userIdFK
-        INNER JOIN `marketplace-db`.departments de ON de.id = d.departmentIdFK
-        INNER JOIN `marketplace-db`.municipalities m ON m.id = d.municipalityIdFK
-        LEFT JOIN `marketplace-db`.wish_lists w ON w.userIdFK = '$id'
-        WHERE c.id LIKE '$category' AND de.id LIKE '$department'
-        ORDER BY p.created_at DESC
-        ;");
-        return response()->json($products, 200);
+        }else{
+            $pricemin = intval($request['pricemin']);
+            $pricemax = intval($request['pricemax']);
+
+            $products = DB::select("SELECT p.id,
+            p.name,
+            p.description,
+            p.price,
+            p.photos,
+            p.status ,
+            p.isAvailable,
+            p.isBanned ,
+            p.userIdFk,
+            c.name  categoryName ,
+            de.name departmentName,
+            u.firstName userFirstName,
+            u.lastName  userLastName,
+            m.name municipalityName,
+            IF(w.productIdFK IS NULL, FALSE, TRUE) isProductInWishList
+            FROM `marketplace-db`.products p
+            INNER JOIN `marketplace-db`.categories c ON p.categoryIdFK  = c.id
+            INNER JOIN  `marketplace-db`.users u ON p.userIdFK = u.id
+            INNER JOIN `marketplace-db`.directions d ON u.id = d.userIdFK
+            INNER JOIN `marketplace-db`.departments de ON de.id = d.departmentIdFK
+            INNER JOIN `marketplace-db`.municipalities m ON m.id = d.municipalityIdFK
+            LEFT JOIN `marketplace-db`.wish_lists w ON w.userIdFK = '$id'
+            WHERE c.id LIKE '$category' AND de.id LIKE '$department' AND p.price  between $pricemin AND $pricemax
+            ORDER BY p.created_at DESC
+            ;");
+            return response()->json($products, 200);
+
+
+        }
+
+
+
     }
 }
