@@ -371,9 +371,20 @@ class ProductController extends Controller
         $page = $request["page"];
         $category = $request["category"];
         $department = $request["department"];
+        $pricemin = $request["pricemin"];
+        $pricemax = $request["pricemax"];
         $id = "%".$id."%";
         $category = "%".$category."%";
         $department = "%".$department."%";
+
+        if($request['category'] == "todos"  || $request['category']==0 ||  $request['category']=='0'){
+            $category = "%%";
+        }
+        if($request['department'] == "todos" || $request['department']==0 ||  $request['department']=='0'){
+            $department = "%%";
+        }
+
+
         if(intval($page) == 1){
             $ini = 0;
             $fin = 8;
@@ -403,8 +414,9 @@ class ProductController extends Controller
         INNER JOIN `marketplace-db`.directions d ON u.id = d.userIdFK
         INNER JOIN `marketplace-db`.departments de ON de.id = d.departmentIdFK
         INNER JOIN `marketplace-db`.municipalities m ON m.id = d.municipalityIdFK
-        LEFT JOIN `marketplace-db`.wish_lists w ON w.productIdFK = p.id
-        WHERE c.name LIKE '$category' AND de.name LIKE '$department' ORDER BY p.created_at DESC  LIMIT $ini, $fin
+        LEFT JOIN `marketplace-db`.wish_lists w ON w.userIdFK = '$id'
+        WHERE c.id LIKE '$category' AND de.id LIKE '$department'
+        ORDER BY p.created_at DESC
         ;");
         return response()->json($products, 200);
     }
