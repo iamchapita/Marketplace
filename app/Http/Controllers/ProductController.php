@@ -303,6 +303,27 @@ class ProductController extends Controller
         return response()->json($product, 200);
     }
 
+    public function getProductsBySeller(Request $request){
+
+        $sellerId = $request->get('sellerId');
+        $products = Product::where('products.userIdFK', '=', $sellerId)
+            ->select(
+                'products.id',
+                'products.name',
+                'products.description',
+                'products.price',
+                'products.photos',
+                'products.status',
+                'products.isAvailable',
+                'products.isBanned'
+            )->get();
+
+        if($products->isEmpty()){
+            return response()->json(['message' => 'No se encontraron Productos'], 200);
+        }else{
+            return response()->json($products, 200);
+        }
+    }
 
     /**
      * Store a newly created resource in storage.

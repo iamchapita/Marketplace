@@ -20,10 +20,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Rutas de Inicio de sesón o registro
+// Rutas de Inicio de sesión, registro y actualización de usuario
 Route::post('/register', [UserController::class, 'register'])->name('register');
 Route::post('/login', [UserController::class, 'login'])->name('login');
 Route::get('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum')->name('logout');
+Route::post('/setToSeller', [UserController::class, 'setToSeller'])->middleware('auth:sanctum')->name('setToSeller');
 Route::post('/createDirection', [DirectionController::class, 'store'])->name('createDirection');
 
 // Ruta de usuario Autenticado
