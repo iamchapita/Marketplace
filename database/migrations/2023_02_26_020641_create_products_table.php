@@ -22,9 +22,11 @@ return new class extends Migration
             $table->boolean('isBanned')->default(false);
             $table->bigInteger('userIdFK')->nullable(false)->unsigned();
             $table->bigInteger('categoryIdFK')->nullable(false)->unsigned();
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
         });
     }
-    
+
 
     /**
      * Reverse the migrations.

@@ -34,13 +34,14 @@ Route::post('/sellerDetails', [UserController::class, 'getSellerDetails']);
 
 // Rutas de Producto
 Route::post('/getProductImages', [ProductController::class, 'getProductImages'])->name('productImages');
-
 Route::get('/products', [ProductController::class, 'getProducts'])->name('products');
-Route::get('/productsWishList/{userId}', [ProductController::class, 'getProductsWithWishlistStatus']);
-
+Route::post('/getProductsBySeller', [ProductController::class, 'getProductsBySeller']);
 Route::get('/product/{id}', [ProductController::class, 'getProductById'])->name('getProduct');
-Route::put('/product/{id}', [ProductController::class, 'editProduct'])->middleware('auth:sanctum')->name('UpdateProduct');
+
+Route::get('/productsWishList/{userId}', [ProductController::class, 'getProductsWithWishlistStatus'])->middleware('auth:sanctum');
+// Route::put('/product/{id}', [ProductController::class, 'editProduct'])->middleware('auth:sanctum')->name('UpdateProduct');
 Route::post('/createProduct', [ProductController::class, 'create'])->middleware('auth:sanctum')->name('createProduct');
+
 
 // Ruta de Categorias
 Route::get('/categories', [CategoryController::class, 'index']);

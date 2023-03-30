@@ -115,7 +115,19 @@ class UserController extends Controller
             $user = User::where('email', $request['email'])->firstOrFail();
             $token = $user->createToken('auth_token')->plainTextToken;
 
-            return response()->json(['access_token' => $token, 'token_type' => 'Bearer']);
+            return response()->json(
+                [
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                    'id' => $user->id,
+                    'isAdmin' => $user->isAdmin,
+                    'isClient' => $user->isClient,
+                    'isSeller' => $user->isSeller,
+                    'isBanned' => $user->isBanned,
+                    'isEnabled' => $user->isEnabled
+                ],
+                200
+            );
         } else {
             return response()->json(['message' => 'Credenciales Incorrectas.'], 401);
         }
@@ -129,7 +141,7 @@ class UserController extends Controller
 
     public function user(Request $request)
     {
-        return $request->user()->only('id');
+        return $request->user()->only('id', 'isAdmin', 'isClient', 'isSeller', 'isBanned', 'isEnabled');
     }
 
     public function getSellerDetails(Request $request)
