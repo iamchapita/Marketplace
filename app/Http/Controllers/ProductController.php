@@ -306,7 +306,12 @@ class ProductController extends Controller
     public function getProductsBySeller(Request $request){
 
         $sellerId = $request->get('sellerId');
-        $products = Product::where('products.userIdFK', '=', $sellerId)
+        $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
+            ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
+            ->join('directions', 'directions.userIdFK', '=', 'products.userIdFK')
+            ->join('departments', 'departments.id', '=', 'directions.departmentIdFK')
+            ->join('municipalities', 'municipalities.id', '=', 'directions.municipalityIdFK')
+            ->where('users.id', '=', $sellerId)
             ->select(
                 'products.id',
                 'products.name',
@@ -315,8 +320,15 @@ class ProductController extends Controller
                 'products.photos',
                 'products.status',
                 'products.isAvailable',
-                'products.isBanned'
-            )->get();
+                'products.isBanned',
+                'products.created_at as createdAt',
+                'categories.name as categoryName',
+                'users.firstName as userFirstName',
+                'users.lastName as userLastName',
+                'departments.name as departmentName',
+                'municipalities.name as municipalityName'
+            )
+            ->get();
 
         if($products->isEmpty()){
             return response()->json(['message' => 'No se encontraron Productos'], 500);
@@ -392,26 +404,26 @@ class ProductController extends Controller
         $page = $request["page"];
         $category = $request["category"];
         $department = $request["department"];
-        $id = "%".$id."%";
-        $category = "%".$category."%";
-        $department = "%".$department."%";
+        $id = "%" . $id . "%";
+        $category = "%" . $category . "%";
+        $department = "%" . $department . "%";
 
-        if($request['category'] == "todos"  || $request['category']==0 ||  $request['category']=='0'){
+        if ($request['category'] == "todos"  || $request['category'] == 0 ||  $request['category'] == '0') {
             $category = "%%";
         }
-        if($request['department'] == "todos" || $request['department']==0 ||  $request['department']=='0'){
+        if ($request['department'] == "todos" || $request['department'] == 0 ||  $request['department'] == '0') {
             $department = "%%";
         }
 
 
-        if(intval($page) == 1){
+        if (intval($page) == 1) {
             $ini = 0;
             $fin = 8;
-        }else{
-            $fin = 8*$page;
-            $ini = $fin-8;
+        } else {
+            $fin = 8 * $page;
+            $ini = $fin - 8;
         }
-        if($request['pricemin']==0 && $request['pricemax']==0 ){
+        if ($request['pricemin'] == 0 && $request['pricemax'] == 0) {
             $products = DB::select("SELECT p.id,
             p.name,
             p.description,
@@ -438,8 +450,7 @@ class ProductController extends Controller
             ORDER BY p.created_at DESC
             ;");
             return response()->json($products, 200);
-
-        }else{
+        } else {
             $pricemin = intval($request['pricemin']);
             $pricemax = intval($request['pricemax']);
 
@@ -469,11 +480,6 @@ class ProductController extends Controller
             ORDER BY p.created_at DESC
             ;");
             return response()->json($products, 200);
-
-
         }
-
-
-
     }
 }
