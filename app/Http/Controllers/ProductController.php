@@ -260,8 +260,7 @@ class ProductController extends Controller
                 'users.lastName as userLastName',
                 'departments.name as departmentName',
                 'municipalities.name as municipalityName'
-            )
-            ->paginate(2);
+            )->get();
 
         return response()->json($products, 200);
     }
@@ -294,8 +293,7 @@ class ProductController extends Controller
                 'departments.name as departmentName',
                 'municipalities.name as municipalityName'
             )
-            ->find($id)
-            ->paginate(8);
+            ->find($id);
 
 
         if (is_null($product)) {
