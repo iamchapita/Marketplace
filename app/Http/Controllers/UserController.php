@@ -160,4 +160,15 @@ class UserController extends Controller
             200
         );
     }
+
+    public function setToSeller(Request $request){
+        $user = User::where('id', $request->only('id'))->first();
+
+        if($user){
+            $user->update(['isSeller' => 1]);
+            return response()->json(['message' => 'Actualizado Correctamente'], 200);
+        }else{
+            return response()->json(['message' => 'No se encontró el Usuario'], 500);
+        }
+    }
 }
