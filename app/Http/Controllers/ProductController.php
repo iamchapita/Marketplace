@@ -325,6 +325,7 @@ class ProductController extends Controller
                 'categories.name as categoryName',
                 'users.firstName as userFirstName',
                 'users.lastName as userLastName',
+                'users.email as userEmail',
                 'departments.name as departmentName',
                 'municipalities.name as municipalityName'
             )
