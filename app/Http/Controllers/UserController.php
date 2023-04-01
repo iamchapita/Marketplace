@@ -146,28 +146,33 @@ class UserController extends Controller
 
     public function getSellerDetails(Request $request)
     {
-        $user = User::where('id', $request->only('id'))->firstOrFail();
-        $direction = Direction::find($request->only('id'))->firstOrFail();
-        $department = Department::find($direction['departmentIdFK']);
-        $municipality = Municipality::find($direction['departmentIdFK']);
+        $queryResult = User::join('directions', 'directions.userIdFK', '=', 'users.id')
+            ->join('departments', 'departments.id', '=', 'directions.departmentIdFK')
+            ->join('municipalities', 'municipalities.id', '=', 'directions.municipalityIdFK')
+            ->select(
+                'users.firstName as userFirstName',
+                'users.lastName as userLastName',
+                'users.email as userEmail',
+                'departments.name as departmentName',
+                'municipalities.name as municipalityName'
+            )
+            ->find($request->only('id'));
 
-        return response()->json(
-            [
-                'userIdFK' => $user['id'],
-                'name' => $user['firstName'] . ' ' . $user['lastName'],
-                'direction' => $municipality['name'] . ', ' . $department['name']
-            ],
-            200
-        );
+        if (is_null($queryResult)) {
+            return response()->json(['message' => 'No se ha encontrado información de usuario.'], 500);
+        } else {
+            return response()->json($queryResult, 200);
+        }
     }
 
-    public function setToSeller(Request $request){
+    public function setToSeller(Request $request)
+    {
         $user = User::where('id', $request->only('id'))->first();
 
-        if($user){
+        if ($user) {
             $user->update(['isSeller' => 1]);
             return response()->json(['message' => 'Actualizado Correctamente'], 200);
-        }else{
+        } else {
             return response()->json(['message' => 'No se encontró el Usuario'], 500);
         }
     }
