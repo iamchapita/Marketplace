@@ -31,7 +31,11 @@ class WishListController extends Controller
 
             )->get();
 
-        return response()->json($wishlist, 200);
+        if($wishlist->isEmpty()){
+            return response()->json(['message' => 'No hay productos en la Wishlist'], 500);
+        }else{
+            return response()->json($wishlist, 200);
+        }
     }
 
 
