@@ -18,7 +18,9 @@ return new class extends Migration
             $table->double('price', null, null, true);
             $table->string('photos', 100);
             $table->string('status', 20);
+            $table->integer('amount', false, true)->default(1);
             $table->boolean('isAvailable')->default(true);
+            $table->boolean('wasSold')->default(false);
             $table->boolean('isBanned')->default(false);
             $table->bigInteger('userIdFK')->nullable(false)->unsigned();
             $table->bigInteger('categoryIdFK')->nullable(false)->unsigned();

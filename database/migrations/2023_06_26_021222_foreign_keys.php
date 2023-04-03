@@ -22,11 +22,6 @@ return new class extends Migration
             $table->foreign('categoryIdFK')->references('id')->on('categories');
         });
 
-        Schema::table('product_sellers', function (Blueprint $table) {
-            $table->foreign('productIdFK')->references('id')->on('products');
-            $table->foreign('userIdFK')->references('id')->on('users');
-        });
-
         Schema::table('municipalities', function (Blueprint $table) {
             $table->foreign('departmentIdFK')->references('id')->on('departments');
         });
