@@ -145,17 +145,6 @@ class ProductController extends Controller
         return $validator;
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(Request $request)
     {
         $validator = $this->validateData($request);
@@ -233,10 +222,6 @@ class ProductController extends Controller
         return response()->json($products, 200);
     }
 
-    /**
-     * Show list product.
-     *
-     */
     public function getProducts()
     {
         $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
@@ -266,9 +251,6 @@ class ProductController extends Controller
         return response()->json($products, 200);
     }
 
-    /**
-     *
-     */
     public function getProductById(Int $id)
     {
 
@@ -305,7 +287,8 @@ class ProductController extends Controller
         return response()->json($product, 200);
     }
 
-    public function getProductsBySeller(Request $request){
+    public function getProductsBySeller(Request $request)
+    {
 
         $sellerId = $request->get('sellerId');
         $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
@@ -334,39 +317,13 @@ class ProductController extends Controller
             )
             ->get();
 
-        if($products->isEmpty()){
+        if ($products->isEmpty()) {
             return response()->json(['message' => 'No se encontraron Productos'], 500);
-        }else{
+        } else {
             return response()->json($products, 200);
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    // public function edit(Product $product)
-    // {
-    //
-    // }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, int $id)
     {
 
@@ -395,13 +352,6 @@ class ProductController extends Controller
         return response()->json(['message' => ''], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Product $product)
-    {
-        //
-    }
     public function getProductst(Request $request)
     {
         $id = $request["id"];
@@ -484,6 +434,45 @@ class ProductController extends Controller
             ORDER BY p.created_at DESC
             ;");
             return response()->json($products, 200);
+        }
+    }
+
+    public function setWasSoldValue(Request $request)
+    {
+        $product =  Product::find($request->get('id'));
+
+        if (is_null($product)) {
+            return response()->json(['message' => 'Producto no encontrado'], 500);
+        } else {
+            $product->wasSold = intval($request->get('wasSold'));
+            $product->save();
+            return response()->json(['message' => 'Se actualizó el estado del Producto'], 200);
+        }
+    }
+
+    public function setIsAvailable(Request $request)
+    {
+        $product =  Product::find($request->get('id'));
+
+        if (is_null($product)) {
+            return response()->json(['message' => 'Producto no encontrado'], 500);
+        } else {
+            $product->isAvailable = intval($request->get('isAvailable'));
+            $product->save();
+            return response()->json(['message' => 'Se actualizó el estado del Producto'], 200);
+        }
+    }
+
+    public function setIsBanned(Request $request)
+    {
+        $product =  Product::find($request->get('id'));
+
+        if (is_null($product)) {
+            return response()->json(['message' => 'Producto no encontrado'], 500);
+        } else {
+            $product->isBanned = intval($request->get('isBanned'));
+            $product->save();
+            return response()->json(['message' => 'Se actualizó el estado del Producto'], 200);
         }
     }
 }
