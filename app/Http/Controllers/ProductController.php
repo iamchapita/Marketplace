@@ -308,6 +308,7 @@ class ProductController extends Controller
                 'products.wasSold',
                 'products.isBanned',
                 'products.created_at as createdAt',
+                'products.updated_at as updatedAt',
                 'categories.name as categoryName',
                 'users.firstName as userFirstName',
                 'users.lastName as userLastName',
