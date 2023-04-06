@@ -272,6 +272,7 @@ class ProductController extends Controller
                 'products.userIdFK',
                 'products.categoryIdFK',
                 'categories.name as categoryName',
+                'users.id as userId',
                 'users.firstName as userFirstName',
                 'users.lastName as userLastName',
                 'departments.name as departmentName',
@@ -281,7 +282,7 @@ class ProductController extends Controller
 
 
         if (is_null($product)) {
-            return response()->json(['message' => 'Producto no encontrado'], 404);
+            return response()->json(['message' => 'Producto no encontrado'], 500);
         }
 
         return response()->json($product, 200);
@@ -475,7 +476,7 @@ class ProductController extends Controller
             $product->save();
             return response()->json(['message' => 'Se actualizó el estado del Producto'], 200);
         }
-    }   
+    }
 
     public function buscaproduct(Request $request)
     {
