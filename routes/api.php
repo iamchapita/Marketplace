@@ -60,3 +60,4 @@ Route::post('/wishlistDelete', [WishlistController::class, 'delete'])->name('wis
 
 
 Route::post('/productst', [ProductController::class, 'getProductst'])->name('productst');
+Route::get('/buscaproduct', [ProductController::class, 'buscaproduct']);
