@@ -93,7 +93,7 @@ class ProductController extends Controller
     protected function validateData($request)
     {
         // Extrayendo las llaves del arreglo de campos a validar
-        $request = $request->only('name', 'description', 'price', 'photos', 'status', 'userIdFK', 'categoryIdFK');
+        $request = $request->only('name', 'description', 'price', 'photos', 'status', 'userIdFK', 'categoryIdFK', 'amount');
         $keys = array_keys($request);
 
         // Estableciendo los nombres personalizados de los atributos
@@ -104,7 +104,8 @@ class ProductController extends Controller
             $keys[3] => 'Fotos',
             $keys[4] => 'Estado',
             $keys[5] => 'Usario',
-            $keys[6] => 'Categoría'
+            $keys[6] => 'Categoría',
+            $keys[7] => 'Cantidad',
         );
 
         // Estableciendo reglas de cada campo respectivamente
@@ -115,7 +116,8 @@ class ProductController extends Controller
             $keys[3] => ['required'],
             $keys[4] => ['required', 'max:20', 'string', 'in:Usado,Nuevo'],
             $keys[5] => ['required', 'numeric'],
-            $keys[6] => ['required', 'numeric']
+            $keys[6] => ['required', 'numeric'],
+            $keys[7] => ['required', 'numeric', 'min:1'],
         );
 
         // Mensajes personalizados para los errores
@@ -128,16 +130,6 @@ class ProductController extends Controller
             'numeric' => 'El campo :attribute debe tener 8 digitos.',
             'bewtween' => 'El campo :attribute debe estar ser 0.'
         );
-
-        if (count($keys) > 7) {
-            // Esyableciendo nombre personalizado a los campos
-            $customAttributes[$keys[7]] = 'Disponible';
-            $customAttributes[$keys[8]] = 'Baneado';
-
-            // Reglas de validacion de los campos
-            $rules[$keys[7]] = ['required', 'between:0,1'];
-            $rules[$keys[8]] = ['required', 'between:0,1'];
-        }
 
         // Validando los datos
         // $fields -> Campos del formulario.
@@ -269,6 +261,7 @@ class ProductController extends Controller
                 'products.price',
                 'products.photos',
                 'products.status',
+                'products.amount',
                 'products.isAvailable',
                 'products.isBanned',
                 'products.wasSold',
@@ -308,6 +301,7 @@ class ProductController extends Controller
                 'products.price',
                 'products.photos',
                 'products.status',
+                'products.amount',
                 'products.isAvailable',
                 'products.wasSold',
                 'products.isBanned',
@@ -357,9 +351,12 @@ class ProductController extends Controller
                     $product->description = $request->input('description');
                     $product->price = $request->input('price');
                     $product->photos = $request->input('photos');
+                    $product->status = $request->input('status');
+                    $product->amount = $request->input('amount');
                     $product->userIdFK = $request->input('userIdFK');
                     $product->categoryIdFK = $request->input('categoryIdFK');
                     $product->updated_at = now();
+
                     // Se queda comentado por si se necesita a futuro
 
                     // $product->isAvailable = $request->input('isAvailable') ? $request->input('isAvailable') : $product->isAvailable;
@@ -550,12 +547,12 @@ class ProductController extends Controller
                 'departments.name as departmentName',
                 'municipalities.name as municipalityName'
             )->get();
-    
+
         $pdf = new Dompdf();
         $pdf->loadHtml(View::make('products.pdf', ['products' => $products])->render());
         $pdf->setPaper('A4', 'portrait');
         $pdf->render();
-    
+
         return $pdf->stream('products.pdf');
     }
 }
