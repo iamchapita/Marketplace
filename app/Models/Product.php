@@ -20,10 +20,14 @@ class Product extends Model
         'price',
         'photos',
         'status',
+        'amount',
         'isAvailable',
+        'wasSold',
         'isBanned',
         'userIdFK',
         'categoryIdFK',
+        'created_at',
+        'updated_at',
     ];
     /**
      * Indicates if the model should be timestamped.
