@@ -53,16 +53,23 @@ class ProductController extends Controller
         }
     }
 
-    protected function base64Decode($request, $mode = 'store')
+    protected function base64Decode($request, $mode = 'store', $path = '')
     {
 
-        // Ruta a guardar crear y a almacenar
-        $path = 'products/' . Str::random(15);
+        if ($mode == 'store') {
+            // Ruta a crear para almacenar las imagenes del producto
+            $path = 'products/' . Str::random(15);
+            // Se confirma si la carpeta para el producto existe, de no ser así
+            // se crea
+            if (!Storage::disk('public')->exists($path)) {
+                Storage::disk('public')->makeDirectory($path);
+            }
+        } else {
+            $files = Storage::files($path);
 
-        // Se confirma si la carpeta para el producto existe, de no ser así
-        // se crea
-        if (!Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->makeDirectory($path);
+            foreach ($files as $file) {
+                Storage::delete($file);
+            }
         }
 
         // Obteniendo el array de archivos enviados
@@ -87,7 +94,7 @@ class ProductController extends Controller
     protected function validateData($request)
     {
         // Extrayendo las llaves del arreglo de campos a validar
-        $request = $request->all();
+        $request = $request->only('name', 'description', 'price', 'photos', 'status', 'userIdFK', 'categoryIdFK');
         $keys = array_keys($request);
 
         // Estableciendo los nombres personalizados de los atributos
@@ -168,9 +175,6 @@ class ProductController extends Controller
         }
     }
 
-    /*
-    Obtiene las imagenes de los productos
-    */
     public function getProductImages(Request $request)
     {
         $path = $request->get('path');
@@ -326,32 +330,48 @@ class ProductController extends Controller
         }
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request)
     {
-
         //Para buscar por id los porductos
-        $product = Product::findOrFail($id);
+        $product = Product::find($request->get('id'));
 
-        $validator = $this->validateData($request);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()]);
+        if (is_null($product)) {
+            return response()->json(['message' => 'Producto no encontrado'], 500);
         } else {
-            //Actualizar Productos
-            $product->name = $request->input('name');
-            $product->description = $request->input('description');
-            $product->price = $request->input('price');
-            $product->photos = $request->input('photos');
-            $product->isAvailable = $request->input('isAvailable');
-            $product->isBanned = $request->input('isBanned');
-            $product->userIdFK = $request->input('userIdFK');
-            $product->categoryIdFK = $request->input('categoryIdFK');
-            $product->save();
+            $validator = $this->validateData($request);
+
+            if ($validator->fails()) {
+                return response()->json(['error' => $validator->errors()], 500);
+            } else {
+
+                // Sobreescribe el campos photos enviados desde el frontend para almacenar
+                // la ruta donde se guardaron las imagenes en la BD.
+                $path = $this->base64Decode($request, 'update', $product->photos);
+                $request->merge(['photos' => $path]);
+
+                if ($request['photos'] == false) {
+                    return response()->json(['error' => 'Error en las imagenes'], 500);
+                } else {
+
+                    //Actualizar Productos
+                    $product->name = $request->input('name');
+                    $product->description = $request->input('description');
+                    $product->price = $request->input('price');
+                    $product->photos = $request->input('photos');
+                    $product->userIdFK = $request->input('userIdFK');
+                    $product->categoryIdFK = $request->input('categoryIdFK');
+
+                    // Se queda comentado por si se necesita a futuro
+
+                    // $product->isAvailable = $request->input('isAvailable') ? $request->input('isAvailable') : $product->isAvailable;
+                    // $product->wasSold = $request->input('wasSold') ? $request->input('wasSold') : $product->wasSold;
+                    // $product->isBanned = $request->input('isBanned') ? $request->input('isBanned') : $product->isBanned;
+
+                    $product->save();
+                    return response()->json(['message' => 'Actualización Completa.'], 200);
+                }
+            }
         }
-
-
-        // Redirigir a la lista de productos con un mensaje de éxito
-        return response()->json(['message' => ''], 200);
     }
 
     public function getProductst(Request $request)
@@ -486,24 +506,23 @@ class ProductController extends Controller
         $pricemax = $request->query('pricemax');
         $palabra_clave = $request->query('palabra_clave');
 
-        $consulta = DB::table('products')->when($department, function($query, $department) {
+        $consulta = DB::table('products')->when($department, function ($query, $department) {
             return $query->where('department', $department);
-            })
-            ->when($category, function($query, $category) {
+        })
+            ->when($category, function ($query, $category) {
                 return $query->where('category', $category);
             })
-            ->when($pricemin, function($query, $pricemin) {
+            ->when($pricemin, function ($query, $pricemin) {
                 return $query->where('price', '>=', $pricemin);
             })
-            ->when($pricemax, function($query, $pricemax) {
+            ->when($pricemax, function ($query, $pricemax) {
                 return $query->where('price', '<=', $pricemax);
             })
-            ->when($palabra_clave, function($query, $palabra_clave) {
-                return $query->where('name', 'like', '%'.$palabra_clave.'%');
+            ->when($palabra_clave, function ($query, $palabra_clave) {
+                return $query->where('name', 'like', '%' . $palabra_clave . '%');
             })
             ->get();
 
         return response()->json($consulta, 200);
     }
-
 }
