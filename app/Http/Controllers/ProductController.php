@@ -65,11 +65,8 @@ class ProductController extends Controller
                 Storage::disk('public')->makeDirectory($path);
             }
         } else {
-            $files = Storage::files($path);
-
-            foreach ($files as $file) {
-                Storage::delete($file);
-            }
+            Storage::disk('public')->deleteDirectory($path);
+            Storage::disk('public')->makeDirectory($path);
         }
 
         // Obteniendo el array de archivos enviados
