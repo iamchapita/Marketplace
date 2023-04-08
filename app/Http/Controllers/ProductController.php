@@ -357,7 +357,7 @@ class ProductController extends Controller
                     $product->photos = $request->input('photos');
                     $product->userIdFK = $request->input('userIdFK');
                     $product->categoryIdFK = $request->input('categoryIdFK');
-
+                    $product->updated_at = now();
                     // Se queda comentado por si se necesita a futuro
 
                     // $product->isAvailable = $request->input('isAvailable') ? $request->input('isAvailable') : $product->isAvailable;
