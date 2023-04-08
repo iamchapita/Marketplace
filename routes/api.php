@@ -58,7 +58,8 @@ Route::post('/wishlist', [WishListController::class, 'index'])->name('getWishlis
 Route::post('/wishlistInsert', [WishlistController::class, 'store'])->name('wishlistStore');
 Route::post('/wishlistDelete', [WishlistController::class, 'delete'])->name('wishlistDelete');
 
-
+// Ruta para Crear PDF
+Route::get('/products/pdf', [ProductController::class, 'generatePDF'])->name('createPDF');
 
 Route::post('/productst', [ProductController::class, 'getProductst'])->name('productst');
 Route::get('/buscaproduct', [ProductController::class, 'buscaproduct']);
