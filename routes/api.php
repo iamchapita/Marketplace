@@ -40,7 +40,7 @@ Route::post('/getProductsBySeller', [ProductController::class, 'getProductsBySel
 Route::get('/product/{id}', [ProductController::class, 'getProductById'])->name('getProduct');
 Route::get('/productsWishList/{userId}', [ProductController::class, 'getProductsWithWishlistStatus'])->middleware('auth:sanctum');
 Route::post('/createProduct', [ProductController::class, 'create'])->middleware('auth:sanctum')->name('createProduct');
-Route::post('/updateProduct', [ProductController::class, 'update']);
+Route::post('/updateProduct', [ProductController::class, 'update'])->middleware('auth:sanctum');
 
 Route::post('/setWasSoldValue', [ProductController::class, 'setWasSoldValue'])->middleware('auth:sanctum');
 Route::post('/setIsAvailableValue', [ProductController::class, 'setIsAvailable'])->middleware('auth:sanctum');
