@@ -46,6 +46,13 @@ Route::post('/setWasSoldValue', [ProductController::class, 'setWasSoldValue'])->
 Route::post('/setIsAvailableValue', [ProductController::class, 'setIsAvailable'])->middleware('auth:sanctum');
 Route::post('/setIsBannedValue', [ProductController::class, 'setIsBanned'])->middleware('auth:sanctum');
 
+// Rutas para Ordenar Productos
+Route::get('/orderedProductsDateAsc', [ProductController::class, 'orderProductsDateAsc'])->name('orderProductsDateAsc');
+Route::post('/orderedProductsDateDesc', [ProductController::class, 'orderProductsDateDesc'])->name('orderProductsDateDesc');
+Route::get('/orderedProductsPriceDesc', [ProductController::class, 'orderProductsPriceDesc'])->name('orderProductsPriceDesc');
+Route::get('/orderedProductsPriceAsc', [ProductController::class, 'orderProductsPriceAsc'])->name('orderProductsPriceAsc');
+
+
 // Ruta de Categorias
 Route::get('/categories', [CategoryController::class, 'index']);
 
