@@ -213,8 +213,11 @@ class ProductController extends Controller
             ->orderBy('products.id', 'ASC')
             ->get();
 
-
-        return response()->json($products, 200);
+        if ($products->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron Productos'], 500);
+        } else {
+            return response()->json($products, 200);
+        }
     }
 
     public function getProducts()
@@ -243,54 +246,23 @@ class ProductController extends Controller
                 'municipalities.name as municipalityName'
             )->get();
 
-        return response()->json($products, 200);
-    }
-
-    
-/***********************************************************************************************************/
-
-
-    public function orderProductsDateDesc(Request $request)
-    {
-        $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
-            ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
-            ->join('directions', 'directions.userIdFK', '=', 'products.userIdFK')
-            ->join('departments', 'departments.id', '=', 'directions.departmentIdFK')
-            ->join('municipalities', 'municipalities.id', '=', 'directions.municipalityIdFK')
-            ->select(
-                'products.id',
-                'products.name',
-                'products.description',
-                'products.price',
-                'products.photos',
-                'products.status',
-                'products.isAvailable',
-                'products.isBanned',
-                'products.wasSold',
-                'products.userIdFK',
-                'products.categoryIdFK',
-                'categories.name as categoryName',
-                'users.firstName as userFirstName',
-                'users.lastName as userLastName',
-                'departments.name as departmentName',
-                'municipalities.name as municipalityName'
-            )->get();
-
-        // Ordena los productos por Fecha de Registro Descendentemente
-        // $request->get('attribute');
-
-        if($request->get('type') == 'Desc'){
-            $products->sortByDesc($request->get('attribute'));
-        }else if($request->get('type') == 'Asc'){
-            $products->sortByAsc($request->get('attribute'));
+        if ($products->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron Productos'], 500);
+        } else {
+            return response()->json($products, 200);
         }
-        // Retorna los productos ordenados
-        return response()->json($products , 200);
     }
 
-/***********************************************************************************************************
-    public function orderProductsDateAsc()
+    public function orderByProducts(Request $request)
     {
+        if(!$request->has('attribute')){
+            return response()->json(['message' => 'No se recibió el atributo criterio para ordenar.'], 500);
+        }
+
+        if(!$request->has('type')){
+            return response()->json(['message' => 'No se recibió el tipo de ordenamiento.'], 500);
+        }
+
         $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
             ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
             ->join('directions', 'directions.userIdFK', '=', 'products.userIdFK')
@@ -313,81 +285,16 @@ class ProductController extends Controller
                 'users.lastName as userLastName',
                 'departments.name as departmentName',
                 'municipalities.name as municipalityName'
-            )->get();
+            )
+            ->orderBy($request->get('attribute'), $request->get('type'))
+            ->get();
 
-        // Ordena los productos por Fecha de Registro Ascendentemente
-        $productsDateAsc = $products->sortBy('created_at');
-
-        // Retorna los productos ordenados
-        return response()->json($productsDateAsc , 200);
+        if ($products->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron Productos'], 500);
+        } else {
+            return response()->json($products, 200);
+        }
     }
-
-    public function orderProductsPriceDesc()
-    {
-        $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
-            ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
-            ->join('directions', 'directions.userIdFK', '=', 'products.userIdFK')
-            ->join('departments', 'departments.id', '=', 'directions.departmentIdFK')
-            ->join('municipalities', 'municipalities.id', '=', 'directions.municipalityIdFK')
-            ->select(
-                'products.id',
-                'products.name',
-                'products.description',
-                'products.price',
-                'products.photos',
-                'products.status',
-                'products.isAvailable',
-                'products.isBanned',
-                'products.wasSold',
-                'products.userIdFK',
-                'products.categoryIdFK',
-                'categories.name as categoryName',
-                'users.firstName as userFirstName',
-                'users.lastName as userLastName',
-                'departments.name as departmentName',
-                'municipalities.name as municipalityName'
-            )->get();
-
-        // Ordena los productos por Precio Descendetemente
-        $productsPriceDesc = $products->sortByDesc('price');
-
-        // Retorna los productos ordenados
-        return response()->json($productsPriceDesc , 200);
-    }
-
-    public function orderProductsPriceAsc()
-    {
-        $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
-            ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
-            ->join('directions', 'directions.userIdFK', '=', 'products.userIdFK')
-            ->join('departments', 'departments.id', '=', 'directions.departmentIdFK')
-            ->join('municipalities', 'municipalities.id', '=', 'directions.municipalityIdFK')
-            ->select(
-                'products.id',
-                'products.name',
-                'products.description',
-                'products.price',
-                'products.photos',
-                'products.status',
-                'products.isAvailable',
-                'products.isBanned',
-                'products.wasSold',
-                'products.userIdFK',
-                'products.categoryIdFK',
-                'categories.name as categoryName',
-                'users.firstName as userFirstName',
-                'users.lastName as userLastName',
-                'departments.name as departmentName',
-                'municipalities.name as municipalityName'
-            )->get();
-
-        // Ordena los productos por Precio Ascendentemente
-        $productsPriceAsc = $products->sortBy('price');
-
-        // Retorna los productos ordenados
-        return response()->json($productsPriceAsc , 200);
-    }
-***********************************************************************************************************/
 
     public function getProductById(Int $id)
     {
