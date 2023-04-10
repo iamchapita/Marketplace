@@ -67,5 +67,5 @@ Route::get('/buscaproduct', [ProductController::class, 'buscaproduct']);
 
 // Rutas de estadisticas
 // IMPLEMENTAR MIDDLEWARE AQUI
-Route::get('/getUsersStatistics', [UserController::class, 'getUsersStatistics']);
-Route::get('/getProductsStatistics', [ProductController::class, 'getProductsStatistics']);
+Route::get('/getUsersStatistics', [UserController::class, 'getUsersStatistics'])->middleware('auth:sanctum');
+Route::get('/getProductsStatistics', [ProductController::class, 'getProductsStatistics'])->middleware('auth:sanctum');
