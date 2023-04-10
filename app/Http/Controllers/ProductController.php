@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Dompdf\Dompdf;
-//use Illuminate\Support\Facades\View;
-
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
 
@@ -608,7 +606,9 @@ class ProductController extends Controller
 
     public function getProductsStatistics()
     {
-        $productsStatistics = Product::count();
+        $productsStatistics = Product::select(
+            DB::raw('COUNT(*) AS total')
+        )->first();
 
         return response()->json($productsStatistics, 200);
     }
