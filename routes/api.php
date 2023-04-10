@@ -64,3 +64,8 @@ Route::get('/products/pdf', [ProductController::class, 'generatePDF'])->name('cr
 
 Route::post('/productst', [ProductController::class, 'getProductst'])->name('productst');
 Route::get('/buscaproduct', [ProductController::class, 'buscaproduct']);
+
+// Rutas de estadisticas
+// IMPLEMENTAR MIDDLEWARE AQUI
+Route::get('/getUsersStatistics', [UserController::class, 'getUsersStatistics']);
+Route::get('/getProductsStatistics', [ProductController::class, 'getProductsStatistics']);

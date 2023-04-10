@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Direction;
 use App\Models\Municipality;
+use Illuminate\Support\Facades\DB;
+
 
 class UserController extends Controller
 {
@@ -175,5 +177,20 @@ class UserController extends Controller
         } else {
             return response()->json(['message' => 'No se encontró el Usuario'], 500);
         }
+    }
+
+    public function getUsersStatistics()
+    {
+
+        $usersStatistics = User::select(
+            DB::raw('COUNT(*) AS total'),
+            DB::raw('SUM(CASE WHEN isBanned = 1 THEN 1 ELSE 0 END) AS countBannedUsers'),
+            DB::raw('SUM(CASE WHEN isBanned = 0 THEN 1 ELSE 0 END) AS countNonBannedUsers'),
+            DB::raw('SUM(CASE WHEN isSeller = 1 THEN 1 ELSE 0 END) AS countSellerUsers'),
+            DB::raw('SUM(CASE WHEN isClient = 1 AND isSeller = 0 THEN 1 ELSE 0 END) AS countClientUsers')
+        )->first();
+
+
+        return response()->json($usersStatistics, 200);
     }
 }

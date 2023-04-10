@@ -255,11 +255,11 @@ class ProductController extends Controller
 
     public function orderByProducts(Request $request)
     {
-        if(!$request->has('attribute')){
+        if (!$request->has('attribute')) {
             return response()->json(['message' => 'No se recibió el atributo criterio para ordenar.'], 500);
         }
 
-        if(!$request->has('type')){
+        if (!$request->has('type')) {
             return response()->json(['message' => 'No se recibió el tipo de ordenamiento.'], 500);
         }
 
@@ -604,5 +604,12 @@ class ProductController extends Controller
         $pdf->render();
 
         return $pdf->stream('products.pdf');
+    }
+
+    public function getProductsStatistics()
+    {
+        $productsStatistics = Product::count();
+
+        return response()->json($productsStatistics, 200);
     }
 }
