@@ -35,6 +35,11 @@ return new class extends Migration
             $table->foreign('userIdFK')->references('id')->on('users');
             $table->foreign('userIdReported')->references('id')->on('users');
         });
+
+        Schema::table('ratings', function (Blueprint $table) {
+            $table->foreign('userIdFK')->references('id')->on('users');
+            $table->foreign('ratedUserIdFK')->references('id')->on('users');
+        });
     }
 
     /**
