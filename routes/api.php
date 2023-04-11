@@ -41,7 +41,6 @@ Route::get('/product/{id}', [ProductController::class, 'getProductById'])->name(
 Route::get('/productsWishList/{userId}', [ProductController::class, 'getProductsWithWishlistStatus'])->middleware('auth:sanctum');
 Route::post('/createProduct', [ProductController::class, 'create'])->middleware('auth:sanctum')->name('createProduct');
 Route::post('/updateProduct', [ProductController::class, 'update'])->middleware('auth:sanctum');
-
 Route::post('/setWasSoldValue', [ProductController::class, 'setWasSoldValue'])->middleware('auth:sanctum');
 Route::post('/setIsAvailableValue', [ProductController::class, 'setIsAvailable'])->middleware('auth:sanctum');
 Route::post('/setIsBannedValue', [ProductController::class, 'setIsBanned'])->middleware('auth:sanctum');
@@ -66,6 +65,8 @@ Route::post('/productst', [ProductController::class, 'getProductst'])->name('pro
 Route::get('/buscaproduct', [ProductController::class, 'buscaproduct']);
 
 // Rutas de estadisticas
-// IMPLEMENTAR MIDDLEWARE AQUI
 Route::get('/getUsersStatistics', [UserController::class, 'getUsersStatistics'])->middleware('auth:sanctum');
 Route::get('/getProductsStatistics', [ProductController::class, 'getProductsStatistics'])->middleware('auth:sanctum');
+
+// Rutas de Administrador
+Route::get('/getAllUsers/{registersPerPage?}/{page?}', [UserController::class, 'getAllUsers']);

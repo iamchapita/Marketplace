@@ -12,7 +12,6 @@ use App\Models\Direction;
 use App\Models\Municipality;
 use Illuminate\Support\Facades\DB;
 
-
 class UserController extends Controller
 {
 
@@ -192,5 +191,36 @@ class UserController extends Controller
 
 
         return response()->json($usersStatistics, 200);
+    }
+
+    public function getAllUsers($registersPerPage = null, $page = null)
+    {
+
+        if (!$page) {
+            $users = User::select(
+                DB::raw('CONCAT(users.firstName, " ", users.lastName) AS userFullName'),
+                'users.dni as userDNI',
+                DB::raw('IF(users.isSeller = 1, "Vendedor", "Cliente") as userType'),
+                DB::raw('IF(users.isBanned = 1, "Sí", "No") as userIsBanned'),
+                DB::raw('IF(users.isEnabled = 1, "Activo", "Desactivado") as userIsEnabled')
+            )->paginate(intval($registersPerPage));
+
+        } else {
+            $users = User::select(
+                DB::raw('CONCAT(users.firstName, " ", users.lastName) AS userFullName'),
+                'users.dni as userDNI',
+                DB::raw('IF(users.isSeller = 1, "Vendedor", "Cliente") as userType'),
+                DB::raw('IF(users.isBanned = 1, "Sí", "No") as userIsBanned'),
+                DB::raw('IF(users.isEnabled = 1, "Activo", "Desactivado") as userIsEnabled')
+            )->skip(($page - 1) * $registersPerPage)
+                ->take($registersPerPage)
+                ->get();
+        }
+
+        if ($users->isEmpty()) {
+            return response()->json(['message' => 'No se encontrarón usuarios.', 500]);
+        } else {
+            return response()->json($users, 200);
+        }
     }
 }
