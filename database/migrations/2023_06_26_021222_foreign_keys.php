@@ -30,6 +30,11 @@ return new class extends Migration
             $table->foreign('userIdFK')->references('id')->on('users');
             $table->foreign('productIdFK')->references('id')->on('products');
         });
+
+        Schema::table('complaints', function (Blueprint $table) {
+            $table->foreign('userIdFK')->references('id')->on('users');
+            $table->foreign('userIdReported')->references('id')->on('users');
+        });
     }
 
     /**
