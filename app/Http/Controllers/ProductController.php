@@ -545,31 +545,18 @@ class ProductController extends Controller
 
     public function buscaproduct(Request $request)
     {
-        $department = $request->query('department');
-        $category = $request->query('category');
-        $pricemin = $request->query('pricemin');
-        $pricemax = $request->query('pricemax');
-        $palabra_clave = $request->query('palabra_clave');
-
-        $consulta = DB::table('products')->when($department, function ($query, $department) {
-            return $query->where('department', $department);
-        })
-            ->when($category, function ($query, $category) {
-                return $query->where('category', $category);
+        $name = $request->query('name');
+        $consulta = DB::table('products')
+            ->when($name, function ($query, $name) {
+                return $query->where('name', 'like', '%' . $name . '%');
             })
-            ->when($pricemin, function ($query, $pricemin) {
-                return $query->where('price', '>=', $pricemin);
-            })
-            ->when($pricemax, function ($query, $pricemax) {
-                return $query->where('price', '<=', $pricemax);
-            })
-            ->when($palabra_clave, function ($query, $palabra_clave) {
-                return $query->where('name', 'like', '%' . $palabra_clave . '%');
-            })
+            ->select('*')
             ->get();
-
+    
         return response()->json($consulta, 200);
     }
+    
+
 
     public function generatePDF()
     {
