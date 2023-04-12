@@ -7,6 +7,7 @@ use App\Http\Controllers\DepartmentsControllers;
 use App\Http\Controllers\MunicipalityControllers;
 use App\Http\Controllers\DirectionController;
 use App\Http\Controllers\WishListController;
+use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -69,4 +70,5 @@ Route::get('/getUsersStatistics', [UserController::class, 'getUsersStatistics'])
 Route::get('/getProductsStatistics', [ProductController::class, 'getProductsStatistics'])->middleware('auth:sanctum');
 
 // Rutas de Administrador
-Route::get('/getAllUsers/{registersPerPage?}/{page?}', [UserController::class, 'getAllUsers']);
+Route::get('/getAllUsers/{registersPerPage?}/{page?}', [UserController::class, 'getAllUsers'])->middleware('auth:sanctum');
+Route::get('/getAllProducts/{registersPerPage?}/{page?}', [ProductController::class, 'getAllProducts'])->middleware('auth:sanctum');

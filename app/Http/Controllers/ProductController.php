@@ -552,11 +552,9 @@ class ProductController extends Controller
             })
             ->select('*')
             ->get();
-    
+
         return response()->json($consulta, 200);
     }
-    
-
 
     public function generatePDF()
     {
@@ -599,5 +597,36 @@ class ProductController extends Controller
         )->first();
 
         return response()->json($productsStatistics, 200);
+    }
+
+    public function getAllProducts($registersPerPage = null, $page = null)
+    {
+
+        if (!$page) {
+            $products = Product::select(
+                'name',
+                'description',
+                'price',
+                'status',
+                'amount',
+                DB::raw('IF(isAvailable = 1, "Disponible", "No Disponible") as isAvailable'),
+                DB::raw('IF(wasSold = 0, "Disponible", "Vendido") as wasSold'),
+                DB::raw('IF(isBanned = 0, "No Banneado", "Banneado") as isBanned'),
+                'created_at',
+            )->paginate(intval($registersPerPage));
+
+        } else {
+            $products = Product::select(
+
+            )->skip(($page - 1) * $registersPerPage)
+                ->take($registersPerPage)
+                ->get();
+        }
+
+        if ($products->isEmpty()) {
+            return response()->json(['message' => 'No se encontrarón products.', 500]);
+        } else {
+            return response()->json($products, 200);
+        }
     }
 }
