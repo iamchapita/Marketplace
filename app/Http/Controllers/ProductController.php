@@ -609,10 +609,10 @@ class ProductController extends Controller
                 'price',
                 'status',
                 'amount',
-                DB::raw('IF(isAvailable = 1, "Disponible", "No Disponible") as isAvailable'),
+                DB::raw('IF(isAvailable = 1, "Público", "Privado") as isAvailable'),
                 DB::raw('IF(wasSold = 0, "Disponible", "Vendido") as wasSold'),
                 DB::raw('IF(isBanned = 0, "No Banneado", "Banneado") as isBanned'),
-                'created_at',
+                'created_at as createdAt',
             )->paginate(intval($registersPerPage));
 
         } else {
