@@ -7,6 +7,7 @@ use App\Http\Controllers\DepartmentsControllers;
 use App\Http\Controllers\MunicipalityControllers;
 use App\Http\Controllers\DirectionController;
 use App\Http\Controllers\WishListController;
+use App\Http\Controllers\RatingsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -70,3 +71,6 @@ Route::get('/getProductsStatistics', [ProductController::class, 'getProductsStat
 
 // Rutas de Administrador
 Route::get('/getAllUsers/{registersPerPage?}/{page?}', [UserController::class, 'getAllUsers']);
+
+Route::post('/rating', [RatingsController::class, 'addRating']);
+Route::post('/getrating', [RatingsController::class, 'ratingValue']);
