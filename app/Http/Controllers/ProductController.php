@@ -202,6 +202,7 @@ class ProductController extends Controller
                 'products.isBanned',
                 'products.userIdFK',
                 'products.categoryIdFK',
+                'products.created_at as createdAt',
                 DB::raw('IF(wish_lists.productIdFK IS NULL, FALSE, TRUE) as isProductInWishList'),
                 'categories.name as categoryName',
                 'users.firstName as userFirstName',
@@ -239,6 +240,7 @@ class ProductController extends Controller
                 'products.wasSold',
                 'products.userIdFK',
                 'products.categoryIdFK',
+                'products.created_at as createdAt',
                 'categories.name as categoryName',
                 'users.firstName as userFirstName',
                 'users.lastName as userLastName',
@@ -558,10 +560,10 @@ class ProductController extends Controller
             })
             ->select('*')
             ->get();
-    
+
         return response()->json($consulta, 200);
     }
-    
+
 
 
     public function generatePDF()
