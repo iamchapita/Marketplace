@@ -9,6 +9,8 @@ use App\Http\Controllers\DirectionController;
 use App\Http\Controllers\WishListController;
 use App\Http\Controllers\RatingsController;
 use Illuminate\Support\Facades\Route;
+use App\Models\Product;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -70,7 +72,9 @@ Route::get('/getUsersStatistics', [UserController::class, 'getUsersStatistics'])
 Route::get('/getProductsStatistics', [ProductController::class, 'getProductsStatistics'])->middleware('auth:sanctum');
 
 // Rutas de Administrador
-Route::get('/getAllUsers/{registersPerPage?}/{page?}', [UserController::class, 'getAllUsers']);
+Route::get('/getAllUsers/{registersPerPage?}/{page?}', [UserController::class, 'getAllUsers'])->middleware('auth:sanctum');
+Route::get('/getAllProducts/{registersPerPage?}/{page?}', [ProductController::class, 'getAllProducts'])->middleware('auth:sanctum');
+
 
 Route::post('/rating', [RatingsController::class, 'addRating']);
 Route::post('/getrating', [RatingsController::class, 'ratingValue']);
