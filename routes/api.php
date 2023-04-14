@@ -75,6 +75,5 @@ Route::get('/getProductsStatistics', [ProductController::class, 'getProductsStat
 Route::get('/getAllUsers/{registersPerPage?}/{page?}', [UserController::class, 'getAllUsers'])->middleware('auth:sanctum');
 Route::get('/getAllProducts/{registersPerPage?}/{page?}', [ProductController::class, 'getAllProducts'])->middleware('auth:sanctum');
 
-
 Route::post('/rating', [RatingsController::class, 'addRating']);
 Route::post('/getrating', [RatingsController::class, 'ratingValue']);

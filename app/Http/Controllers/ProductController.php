@@ -189,7 +189,6 @@ class ProductController extends Controller
             ->leftJoin('wish_lists', function ($join) use ($userId) {
                 $join->on('wish_lists.productIdFK', '=', 'products.id')
                     ->where('wish_lists.userIdFK', '=', $userId);
-                    
             })
             ->select(
                 'products.id',
@@ -202,15 +201,15 @@ class ProductController extends Controller
                 'products.isBanned',
                 'products.userIdFK',
                 'products.categoryIdFK',
-                'products.created_at as createdAt',
                 DB::raw('IF(wish_lists.productIdFK IS NULL, FALSE, TRUE) as isProductInWishList'),
                 'categories.name as categoryName',
                 'users.firstName as userFirstName',
                 'users.lastName as userLastName',
                 'departments.name as departmentName',
                 'municipalities.name as municipalityName'
-            )->where('products.isAvailable', '=', 1)
-            ->where('products.isBanned', '=', 0 )
+            )
+            ->where('products.isAvailable', '=', 1)
+            ->where('products.isBanned', '=', 0)
             ->orderBy('products.id', 'ASC')
             ->get();
 
@@ -240,14 +239,13 @@ class ProductController extends Controller
                 'products.wasSold',
                 'products.userIdFK',
                 'products.categoryIdFK',
-                'products.created_at as createdAt',
                 'categories.name as categoryName',
                 'users.firstName as userFirstName',
                 'users.lastName as userLastName',
                 'departments.name as departmentName',
                 'municipalities.name as municipalityName'
             )->where('products.isAvailable', '=', 1)
-            ->where('products.isBanned', '=', 0 )
+            ->where('products.isBanned', '=', 0)
             ->get();
 
         if ($products->isEmpty()) {
@@ -350,7 +348,7 @@ class ProductController extends Controller
             ->join('municipalities', 'municipalities.id', '=', 'directions.municipalityIdFK')
             ->where('users.id', '=', $sellerId)
             ->where('products.isbanned', '=', 0)
-            ->where('products.isAvailable', '=',1)
+            ->where('products.isAvailable', '=', 1)
             ->select(
                 'products.id',
                 'products.name',
@@ -475,7 +473,8 @@ class ProductController extends Controller
             INNER JOIN `marketplace-db`.departments de ON de.id = d.departmentIdFK
             INNER JOIN `marketplace-db`.municipalities m ON m.id = d.municipalityIdFK
             LEFT JOIN `marketplace-db`.wish_lists w ON w.userIdFK = '$id'
-            WHERE c.id LIKE '$category' AND de.id LIKE '$department' AND p.isBanned = 0 AND p.isAvailable = 1
+            WHERE c.id LIKE '$category' AND de.id LIKE '$department'
+            AND p.isBanned = 0 AND p.isAvailable = 1
             ORDER BY p.created_at DESC
             ;");
             return response()->json($products, 200);
@@ -505,7 +504,7 @@ class ProductController extends Controller
             INNER JOIN `marketplace-db`.departments de ON de.id = d.departmentIdFK
             INNER JOIN `marketplace-db`.municipalities m ON m.id = d.municipalityIdFK
             LEFT JOIN `marketplace-db`.wish_lists w ON w.userIdFK = '$id'
-            WHERE c.id LIKE '$category' AND de.id LIKE '$department' AND p.isBanned = 0 AND p.isAvailable = 1 AND p.price  between $pricemin AND $pricemax 
+            WHERE c.id LIKE '$category' AND de.id LIKE '$department' AND p.isBanned = 0 AND p.isAvailable = 1 AND p.price  between $pricemin AND $pricemax
             ORDER BY p.created_at DESC
             ;");
             return response()->json($products, 200);
@@ -564,8 +563,6 @@ class ProductController extends Controller
         return response()->json($consulta, 200);
     }
 
-
-
     public function generatePDF()
     {
         $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
@@ -607,5 +604,33 @@ class ProductController extends Controller
         )->first();
 
         return response()->json($productsStatistics, 200);
+    }
+
+    public function getAllProducts($registersPerPage = null, $page = null)
+    {
+
+        if (!$page) {
+            $products = Product::select(
+                'name',
+                'description',
+                'price',
+                'status',
+                'amount',
+                DB::raw('IF(isAvailable = 1, "Público", "Privado") as isAvailable'),
+                DB::raw('IF(wasSold = 0, "Disponible", "Vendido") as wasSold'),
+                DB::raw('IF(isBanned = 0, "No Banneado", "Banneado") as isBanned'),
+                'created_at as createdAt',
+            )->paginate(intval($registersPerPage));
+        } else {
+            $products = Product::select()->skip(($page - 1) * $registersPerPage)
+                ->take($registersPerPage)
+                ->get();
+        }
+
+        if ($products->isEmpty()) {
+            return response()->json(['message' => 'No se encontrarón products.', 500]);
+        } else {
+            return response()->json($products, 200);
+        }
     }
 }
