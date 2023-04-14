@@ -20,6 +20,8 @@ class WishListController extends Controller
         $wishlist = WishList::join('products', 'products.id', '=', 'wish_lists.productIdFK')
             ->join('users', 'users.id', '=', 'wish_lists.userIdFK')
             ->where('wish_lists.userIdFK', $useridFK)
+            ->where('products.isAvailable', '=', 1)
+            ->where('products.isBanned', '=', 0 )
             ->select(
                 'products.id',
                 'products.name',

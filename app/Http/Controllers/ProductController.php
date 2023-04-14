@@ -189,6 +189,7 @@ class ProductController extends Controller
             ->leftJoin('wish_lists', function ($join) use ($userId) {
                 $join->on('wish_lists.productIdFK', '=', 'products.id')
                     ->where('wish_lists.userIdFK', '=', $userId);
+                    
             })
             ->select(
                 'products.id',
@@ -207,7 +208,8 @@ class ProductController extends Controller
                 'users.lastName as userLastName',
                 'departments.name as departmentName',
                 'municipalities.name as municipalityName'
-            )
+            )->where('products.isAvailable', '=', 1)
+            ->where('products.isBanned', '=', 0 )
             ->orderBy('products.id', 'ASC')
             ->get();
 
@@ -242,7 +244,9 @@ class ProductController extends Controller
                 'users.lastName as userLastName',
                 'departments.name as departmentName',
                 'municipalities.name as municipalityName'
-            )->get();
+            )->where('products.isAvailable', '=', 1)
+            ->where('products.isBanned', '=', 0 )
+            ->get();
 
         if ($products->isEmpty()) {
             return response()->json(['message' => 'No se encontraron Productos'], 500);
@@ -343,6 +347,8 @@ class ProductController extends Controller
             ->join('departments', 'departments.id', '=', 'directions.departmentIdFK')
             ->join('municipalities', 'municipalities.id', '=', 'directions.municipalityIdFK')
             ->where('users.id', '=', $sellerId)
+            ->where('products.isbanned', '=', 0)
+            ->where('products.isAvailable', '=',1)
             ->select(
                 'products.id',
                 'products.name',
@@ -467,7 +473,7 @@ class ProductController extends Controller
             INNER JOIN `marketplace-db`.departments de ON de.id = d.departmentIdFK
             INNER JOIN `marketplace-db`.municipalities m ON m.id = d.municipalityIdFK
             LEFT JOIN `marketplace-db`.wish_lists w ON w.userIdFK = '$id'
-            WHERE c.id LIKE '$category' AND de.id LIKE '$department'
+            WHERE c.id LIKE '$category' AND de.id LIKE '$department' AND p.isBanned = 0 AND p.isAvailable = 1
             ORDER BY p.created_at DESC
             ;");
             return response()->json($products, 200);
@@ -497,7 +503,7 @@ class ProductController extends Controller
             INNER JOIN `marketplace-db`.departments de ON de.id = d.departmentIdFK
             INNER JOIN `marketplace-db`.municipalities m ON m.id = d.municipalityIdFK
             LEFT JOIN `marketplace-db`.wish_lists w ON w.userIdFK = '$id'
-            WHERE c.id LIKE '$category' AND de.id LIKE '$department' AND p.price  between $pricemin AND $pricemax
+            WHERE c.id LIKE '$category' AND de.id LIKE '$department' AND p.isBanned = 0 AND p.isAvailable = 1 AND p.price  between $pricemin AND $pricemax 
             ORDER BY p.created_at DESC
             ;");
             return response()->json($products, 200);
