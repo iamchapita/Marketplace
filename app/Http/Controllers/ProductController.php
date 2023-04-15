@@ -608,27 +608,30 @@ class ProductController extends Controller
 
     public function getAllProducts($registersPerPage = null, $page = null)
     {
+        $productFields = [
+            'id',
+            'name',
+            'price',
+            'status',
+            'amount',
+            DB::raw('IF(isAvailable = 1, "Público", "Privado") as isAvailable'),
+            DB::raw('IF(wasSold = 0, "Disponible", "Vendido") as wasSold'),
+            DB::raw('IF(isBanned = 0, "No Banneado", "Banneado") as isBanned'),
+            'created_at as createdAt',
+        ];
 
         if (!$page) {
-            $products = Product::select(
-                'name',
-                'description',
-                'price',
-                'status',
-                'amount',
-                DB::raw('IF(isAvailable = 1, "Público", "Privado") as isAvailable'),
-                DB::raw('IF(wasSold = 0, "Disponible", "Vendido") as wasSold'),
-                DB::raw('IF(isBanned = 0, "No Banneado", "Banneado") as isBanned'),
-                'created_at as createdAt',
-            )->paginate(intval($registersPerPage));
+            $products = Product::select(...$productFields)
+                ->paginate(intval($registersPerPage));
         } else {
-            $products = Product::select()->skip(($page - 1) * $registersPerPage)
+            $products = Product::select(...$productFields)
+                ->skip(($page - 1) * $registersPerPage)
                 ->take($registersPerPage)
                 ->get();
         }
 
         if ($products->isEmpty()) {
-            return response()->json(['message' => 'No se encontrarón products.', 500]);
+            return response()->json(['message' => 'No se encontraron productos.'], 500);
         } else {
             return response()->json($products, 200);
         }
