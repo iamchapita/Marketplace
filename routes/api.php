@@ -77,3 +77,9 @@ Route::get('/getAllProducts/{registersPerPage?}/{page?}', [ProductController::cl
 
 Route::post('/rating', [RatingsController::class, 'addRating']);
 Route::post('/getrating', [RatingsController::class, 'ratingValue']);
+
+//Envio de Correo
+//Route::get('/send', function(){
+//    Mail::to('edusalgado00@gmail.com')->send(new Notification());
+//    return 'Correo Enviado';
+//});
