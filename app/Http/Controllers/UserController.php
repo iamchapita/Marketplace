@@ -171,7 +171,10 @@ class UserController extends Controller
         $user = User::where('id', $request->only('id'))->first();
 
         if ($user) {
-            $user->update(['isSeller' => 1]);
+
+            $user->isBanned = 1;
+            $user->save();
+
             return response()->json(['message' => 'Actualizado Correctamente'], 200);
         } else {
             return response()->json(['message' => 'No se encontró el Usuario'], 500);
@@ -205,10 +208,9 @@ class UserController extends Controller
         ];
 
         if (!$page) {
-            $users = User::select(...$fields)->where('isAdmin', '=' , '0')->paginate(intval($registersPerPage));
-
+            $users = User::select(...$fields)->where('isAdmin', '=', '0')->paginate(intval($registersPerPage));
         } else {
-            $users = User::select(...$fields)->where('isAdmin', '=' , '0')->skip(($page - 1) * $registersPerPage)
+            $users = User::select(...$fields)->where('isAdmin', '=', '0')->skip(($page - 1) * $registersPerPage)
                 ->take($registersPerPage)
                 ->get();
         }
@@ -217,6 +219,22 @@ class UserController extends Controller
             return response()->json(['message' => 'No se encontrarón usuarios.', 500]);
         } else {
             return response()->json($users, 200);
+        }
+    }
+
+    public function setIsBanned(Request $request)
+    {
+
+        $user = User::where('id', $request->only('id'))->first();
+
+        if ($user) {
+
+            $user->isBanned = intval($request->get('isBanned'));
+            $user->save();
+
+            return response()->json(['message' => 'Actualizado Correctamente'], 200);
+        } else {
+            return response()->json(['message' => 'No se encontró el Usuario'], 500);
         }
     }
 }
