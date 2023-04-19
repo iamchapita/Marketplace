@@ -75,7 +75,8 @@ Route::get('/getProductsStatistics', [ProductController::class, 'getProductsStat
 Route::get('/getAllUsers/{registersPerPage?}/{page?}', [UserController::class, 'getAllUsers'])->middleware('auth:sanctum');
 Route::get('/getAllProducts/{registersPerPage?}/{page?}', [ProductController::class, 'getAllProducts'])->middleware('auth:sanctum');
 
-Route::post('/setIsBanned', [UserController::class, 'setIsBanned'])->middleware('auth:sanctum');
+Route::post('/setUserIsBanned', [UserController::class, 'setIsBanned'])->middleware('auth:sanctum');
+Route::post('/setProductIsBanned', [ProductController::class, 'setIsBanned']);
 
 // Rutas de calificaion de usuario
 Route::post('/setRating', [RatingsController::class, 'setRating'])->middleware('auth:sanctum');;
