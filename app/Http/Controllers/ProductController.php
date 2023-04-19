@@ -351,11 +351,11 @@ class ProductController extends Controller
         ];
 
         if ($request->has('isBannedStatus')) {
-            array_push($whereConditions, ['products.isBanned', '=', $request->get('isBannedStatus') ? 1 : 0 ]);
+            array_push($whereConditions, ['products.isBanned', '=', $request->get('isBannedStatus') ? 1 : 0]);
         }
 
         if ($request->has('isAvailableStatus')) {
-            array_push($whereConditions, ['products.isAvailable', '=', $request->get('isAvailableStatus') ? 1 : 0 ]);
+            array_push($whereConditions, ['products.isAvailable', '=', $request->get('isAvailableStatus') ? 1 : 0]);
         }
 
         $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
