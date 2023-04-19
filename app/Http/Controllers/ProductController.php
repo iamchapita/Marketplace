@@ -372,6 +372,7 @@ class ProductController extends Controller
                 'users.firstName as userFirstName',
                 'users.lastName as userLastName',
                 'users.email as userEmail',
+                'users.isBanned as userIsBanned',
                 'departments.name as departmentName',
                 'municipalities.name as municipalityName'
             )
