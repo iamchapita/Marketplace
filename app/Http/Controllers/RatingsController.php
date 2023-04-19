@@ -3,20 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Ratings;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
-use Illuminate\View\View;
-
 
 class RatingsController extends Controller
 {
     //
 
-    public function addRating(Request $request){
+    public function setRating(Request $request)
+    {
         $userIdFK =  $request["userIdFK"];
         $ratedUserIdFK = $request["ratedUserIdFK"];
         $rating = $request["rating"];
@@ -24,21 +19,14 @@ class RatingsController extends Controller
         $ratings = DB::insert("INSERT INTO ratings (userIdFK, ratedUserIdFK, rating) VALUES
         ('$userIdFK','$ratedUserIdFK','$rating')");
         return response()->json($ratings, 200);
-
-
-
     }
 
 
-    public function ratingValue(Request $request){
+    public function getRating(Request $request)
+    {
         $userIdFK = $request["userIdFK"];
         $ratedUserIdFK = $request["ratedUserIdFK"];
-        
-        
-
         $rating = DB::select("SELECT * FROM `marketplace-db`.ratings WHERE userIdFK = $userIdFK AND ratedUserIdFK = $ratedUserIdFK;");
         return response()->json($rating, 200);
-
     }
-    
 }

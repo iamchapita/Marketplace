@@ -78,8 +78,8 @@ Route::get('/getAllProducts/{registersPerPage?}/{page?}', [ProductController::cl
 Route::post('/setIsBanned', [UserController::class, 'setIsBanned'])->middleware('auth:sanctum');
 
 // Rutas de calificaion de usuario
-Route::post('/rating', [RatingsController::class, 'addRating']);
-Route::post('/getrating', [RatingsController::class, 'ratingValue']);
+Route::post('/setRating', [RatingsController::class, 'setRating'])->middleware('auth:sanctum');;
+Route::post('/getRating', [RatingsController::class, 'getRating']);
 
 //Envio de Correo
 //Route::get('/send', function(){
