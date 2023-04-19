@@ -149,7 +149,7 @@ class ProductController extends Controller
             return response()->json(['error' => $validator->errors()], 500);
         } else {
 
-            if(!$request->has('created_at')){
+            if (!$request->has('created_at')) {
                 $request->merge(['created_at' => now()]);
             }
 
@@ -346,15 +346,24 @@ class ProductController extends Controller
     public function getProductsBySeller(Request $request)
     {
 
-        $sellerId = $request->get('sellerId');
+        $whereConditions = [
+            ['users.id', '=', $request->get('sellerId')]
+        ];
+
+        if ($request->has('isBannedStatus')) {
+            array_push($whereConditions, ['products.isBanned', '=', $request->get('isBannedStatus') ? 1 : 0 ]);
+        }
+
+        if ($request->has('isAvailableStatus')) {
+            array_push($whereConditions, ['products.isAvailable', '=', $request->get('isAvailableStatus') ? 1 : 0 ]);
+        }
+
         $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
             ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
             ->join('directions', 'directions.userIdFK', '=', 'products.userIdFK')
             ->join('departments', 'departments.id', '=', 'directions.departmentIdFK')
             ->join('municipalities', 'municipalities.id', '=', 'directions.municipalityIdFK')
-            ->where('users.id', '=', $sellerId)
-            ->where('products.isbanned', '=', 0)
-            ->where('products.isAvailable', '=', 1)
+            ->where($whereConditions)
             ->select(
                 'products.id',
                 'products.name',
