@@ -149,6 +149,10 @@ class ProductController extends Controller
             return response()->json(['error' => $validator->errors()], 500);
         } else {
 
+            if(!$request->has('created_at')){
+                $request->merge(['created_at' => now()]);
+            }
+
             // Sobreescribe el campos photos enviados desde el frontend para almacenar
             // la ruta donde se guardaron las imagenes en la BD.
             $path = $this->base64Decode($request, 'store');
