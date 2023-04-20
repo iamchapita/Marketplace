@@ -9,8 +9,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Dompdf\Dompdf;
+use Illuminate\Support\Facades\View;
 use App\Http\Controllers\Controller;
-use Illuminate\View\View;
+//use Codedge\Fpdf\Fpdf\Fpdf;
 
 class ProductController extends Controller
 {
@@ -579,39 +580,8 @@ class ProductController extends Controller
         return response()->json($consulta, 200);
     }
 
-    public function generatePDF()
-    {
-        $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
-            ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
-            ->join('directions', 'directions.userIdFK', '=', 'products.userIdFK')
-            ->join('departments', 'departments.id', '=', 'directions.departmentIdFK')
-            ->join('municipalities', 'municipalities.id', '=', 'directions.municipalityIdFK')
-            ->select(
-                'products.id',
-                'products.name',
-                'products.description',
-                'products.price',
-                'products.photos',
-                'products.status',
-                'products.isAvailable',
-                'products.isBanned',
-                'products.wasSold',
-                'products.userIdFK',
-                'products.categoryIdFK',
-                'categories.name as categoryName',
-                'users.firstName as userFirstName',
-                'users.lastName as userLastName',
-                'departments.name as departmentName',
-                'municipalities.name as municipalityName'
-            )->get();
-
-        $pdf = new Dompdf();
-        $pdf->loadHtml(View::make('products.pdf', ['products' => $products])->render());
-        $pdf->setPaper('A4', 'portrait');
-        $pdf->render();
-
-        return $pdf->stream('products.pdf');
-    }
+    //$pdf = new FPDF();
+    //$pdf->AddPage();
 
     public function getProductsStatistics()
     {

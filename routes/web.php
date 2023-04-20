@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\ProductPdfController;
 use App\Mail\Notification;
 
 /*
@@ -25,6 +26,5 @@ Route::get('/send', function(){
     return 'Correo Enviado';
 });
 
-//Mailgun
-// Email: market.place.ingsw.23@gmail.com
-// Password: M@rket_IS_23
+Route::get('/products/pdf', [ProductPdfController::class , 'generatePdf']);
+
