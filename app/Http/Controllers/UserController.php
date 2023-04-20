@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\Direction;
 use App\Models\Municipality;
+use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
@@ -225,8 +226,10 @@ class UserController extends Controller
 
     public function setIsBanned(Request $request)
     {
-
         $user = User::where('id', $request->only('id'))->first();
+
+        $products =  Product::where('userIdFK', $request->only('id'))
+            ->update(['isAvailable' => intval($request->get('isBanned')) == 1 ? 0 : 1]);
 
         if ($user) {
 
