@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Storage;
 use PDF;
 
 
@@ -31,6 +32,10 @@ class ProductPdfController extends Controller
         // Generar la vista con los productos
         $pdf = new Dompdf();
         $pdf = PDF::loadView('product-pdf', compact('products'));
+        
+        // Guardar el PDF en la carpeta de almacenamiento de Laravel
+        $pdfContent = $pdf->output();
+        Storage::put('pdf' .DIRECTORY_SEPARATOR. 'prueba3.pdf', $pdfContent);
         
         // Descargar el PDF
         return $pdf->download('prueba.pdf');
