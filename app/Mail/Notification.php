@@ -8,6 +8,8 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Message;
+
 
 class Notification extends Mailable
 {
@@ -18,9 +20,19 @@ class Notification extends Mailable
         //
     }
 
-    /*Recoge la Vista del Correo*/
+    /*Recoge la Vista del Correo
     public function build()
     {
         return $this->view('mail');
+    }*/
+
+    public function build()
+    {
+    return $this->view('mail')
+                ->attach(storage_path('app/pdf/prueba.pdf'), [
+                    'as' => 'prueba.pdf',
+                    'mime' => 'application/pdf',
+                ]);
     }
+
 }

@@ -26,5 +26,5 @@ Route::get('/send', function(){
     return 'Correo Enviado';
 });
 
-Route::get('/products/pdf', [ProductPdfController::class , 'generatePdf']);
+Route::get('/pdf', [ProductPdfController::class , 'generatePdf']);
 
