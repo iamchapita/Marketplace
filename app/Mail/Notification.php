@@ -20,17 +20,11 @@ class Notification extends Mailable
         //
     }
 
-    /*Recoge la Vista del Correo
-    public function build()
-    {
-        return $this->view('mail');
-    }*/
-
     public function build()
     {
     return $this->view('mail')
-                ->attach(storage_path('app/pdf/prueba.pdf'), [
-                    'as' => 'prueba.pdf',
+                ->attach(storage_path('app/pdf/Prueba.pdf'), [
+                    'as' => 'Prueba.pdf',
                     'mime' => 'application/pdf',
                 ]);
     }

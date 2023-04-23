@@ -18,6 +18,7 @@
         }
     </style>
 </head>
+
 <body>
     <h1>Lista de productos</h1>
     <table>
@@ -27,6 +28,8 @@
                 <th>Descripción</th>
                 <th>Precio</th>
                 <th>Categoría</th>
+                <th>Imágenes</th>
+                <th>Detalles</th>
             </tr>
         </thead>
         <tbody>
@@ -36,9 +39,13 @@
                     <td>{{ $product->description }}</td>
                     <td>{{ $product->price }}</td>
                     <td>{{ $product->categoryName }}</td>
+                    <td>No Salen Aun</td>
+                    <td><a href="http://localhost:3000/productDetail/{{ $product->id }}">Ver detalles</a></td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 </body>
+
+
 </html>

@@ -47,19 +47,7 @@
     </style>
 </head>
 <body>
-    <table>
-        <tr class="header">
-            <td>
-                <h1>Productos Semanales</h1>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <p>Hola Querido Cliente</p>
-                <p>Aqui tiene los Productos Semanales de sus Categorias Favoritas</p>
-            </td>
-        </tr>
-        <tr class="footer">
-            
-        </tr>
-    </table>
+    <h1>Productos Semanales</h1>
+    <p>Hola Querido Cliente</p>
+    <p>Aqui tiene los Productos Semanales de sus Categorias Favoritas</p>
+</body>
