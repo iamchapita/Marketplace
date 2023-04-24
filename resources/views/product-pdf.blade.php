@@ -16,6 +16,10 @@
         th {
             background-color: #ddd;
         }
+        img{
+            height: 5em;
+            width: 5em;
+        }
     </style>
 </head>
 
@@ -37,9 +41,13 @@
                 <tr>
                     <td>{{ $product->name }}</td>
                     <td>{{ $product->description }}</td>
-                    <td>{{ $product->price }}</td>
+                    <td>L. {{ $product->price }}</td>
                     <td>{{ $product->categoryName }}</td>
-                    <td>No Salen Aun</td>
+                    @foreach ($product->photos as $imageArray)
+                        <td>
+                            <img src="data:image/jpg;base64,{{ $imageArray['base64Image'] }}" alt="{{ $imageArray['name'] }}">
+                        </td>
+                    @endforeach
                     <td><a href="http://localhost:3000/productDetail/{{ $product->id }}">Ver detalles</a></td>
                 </tr>
             @endforeach

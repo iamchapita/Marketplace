@@ -8,8 +8,9 @@ use App\Http\Controllers\MunicipalityControllers;
 use App\Http\Controllers\DirectionController;
 use App\Http\Controllers\WishListController;
 use App\Http\Controllers\RatingsController;
+use App\Http\Controllers\ProductPdfController;
 use Illuminate\Support\Facades\Route;
-use App\Models\Product;
+use App\Mail\Notification;
 
 
 /*
@@ -82,8 +83,10 @@ Route::post('/setProductIsBanned', [ProductController::class, 'setIsBanned'])->m
 Route::post('/setRating', [RatingsController::class, 'setRating'])->middleware('auth:sanctum');;
 Route::post('/getRating', [RatingsController::class, 'getRating']);
 
-//Envio de Correo
-//Route::get('/send', function(){
-//    Mail::to('edusalgado00@gmail.com')->send(new Notification());
-//    return 'Correo Enviado';
-//});
+//Envia el Correo
+Route::get('/send', function () {
+    Mail::to(['edusalgado00@gmail.com', 'alejandrom646@gmail.com', 'isacantarero29@gmail.com'])->send(new Notification());
+    return response()->json(['message' => 'Correo Enviado']);
+});
+
+Route::get('/generatePdf', [ProductPdfController::class, 'generatePdf']);

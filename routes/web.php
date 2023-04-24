@@ -15,16 +15,3 @@ use App\Mail\Notification;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-//Envia el Correo
-Route::get('/send', function(){
-    Mail::to('edusalgado00@gmail.com')->send(new Notification());
-    return 'Correo Enviado';
-});
-
-Route::get('/pdf', [ProductPdfController::class , 'generatePdf']);
-

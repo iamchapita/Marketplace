@@ -3,13 +3,8 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Mail\Message;
-
 
 class Notification extends Mailable
 {
@@ -23,7 +18,7 @@ class Notification extends Mailable
     public function build()
     {
     return $this->view('mail')
-                ->attach(storage_path('app/pdf/Prueba.pdf'), [
+                ->attach(storage_path('app/public/pdf/Prueba.pdf'), [
                     'as' => 'Prueba.pdf',
                     'mime' => 'application/pdf',
                 ]);
