@@ -20,6 +20,7 @@ class Product extends Model
         'price',
         'photos',
         'status',
+        'views',
         'amount',
         'isAvailable',
         'wasSold',

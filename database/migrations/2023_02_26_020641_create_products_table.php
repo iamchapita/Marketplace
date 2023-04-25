@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('photos', 100);
             $table->string('status', 20);
             $table->integer('amount', false, true)->default(1);
+            $table->integer('views', false, true)->default(0)->nullable(false);
             $table->boolean('isAvailable')->default(true);
             $table->boolean('wasSold')->default(false);
             $table->boolean('isBanned')->default(false);
