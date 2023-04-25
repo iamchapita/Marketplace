@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Product;
 use App\Http\Controllers\Controller;
 use Dompdf\Dompdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use PDF;
 
@@ -36,9 +38,12 @@ class ProductPdfController extends Controller
                     // Se obtiene el nombre del archivo
                     $name = explode('/', $file);
                     $name = $name[count($name) - 1];
+                    $type = explode('.', $name);
+                    $type = $type[count($type) - 1];
 
                     // Obteniendo el arreglo del nombre y el contenido del archivo
                     $fileReponse = array(
+                        'type' => $type,
                         'name' => $name,
                         'base64Image' => base64_encode($content)
                     );
@@ -54,20 +59,20 @@ class ProductPdfController extends Controller
     {
         // Obtener los productos con el código que proporcionaste
         $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
-        ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
-        ->where('products.isBanned', '=', '0')
-        ->where('products.isAvailable', '=', '1')
-        ->select(
-            'products.id',
-            'products.name',
-            'products.description',
-            'products.price',
-            'products.photos',
-            'categories.name as categoryName'
-        )
-        ->get();
+            ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
+            ->where('products.isBanned', '=', '0')
+            ->where('products.isAvailable', '=', '1')
+            ->select(
+                'products.id',
+                'products.name',
+                'products.status',
+                'products.price',
+                'products.photos',
+                'categories.name as categoryName'
+            )
+            ->get();
 
-        foreach($products as $product){
+        foreach ($products as $product) {
 
             $product->photos = $this->base64Encode($product->photos, 1);
         }
@@ -80,7 +85,7 @@ class ProductPdfController extends Controller
 
         // Guardar el PDF en la carpeta de almacenamiento de Laravel
         $pdfContent = $pdf->output();
-        Storage::disk('public')->put('pdf' .DIRECTORY_SEPARATOR. 'Prueba.pdf', $pdfContent);
+        Storage::disk('public')->put('pdf' . DIRECTORY_SEPARATOR . 'Prueba.pdf', $pdfContent);
 
         // Descargar el PDF
         return $pdf->download('Prueba.pdf');
