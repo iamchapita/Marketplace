@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('description')->nullable(false);
             $table->string('evidences', 100)->nullable(false);
             $table->boolean('isAwaitingResponse')->nullable(false)->default(true);
-            $table->boolean('wasApproved')->nullable(false);
+            $table->boolean('wasApproved')->nullable(true);
             $table->timestamp('created_at')->nullable()->useCurrent();
             $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
         });
