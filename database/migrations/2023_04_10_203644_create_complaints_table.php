@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('userIdFK')->nullable(false)->unsigned();
             $table->bigInteger('userIdReported')->nullable(false)->unsigned();
+            $table->bigInteger('productIdFK')->nullable(false)->unsigned();
             $table->string('description')->nullable(false);
             $table->string('evidences', 100)->nullable(false);
             $table->boolean('isAwaitingResponse')->nullable(false)->default(true);
