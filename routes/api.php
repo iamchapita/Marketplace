@@ -9,6 +9,7 @@ use App\Http\Controllers\DirectionController;
 use App\Http\Controllers\WishListController;
 use App\Http\Controllers\RatingsController;
 use App\Http\Controllers\ProductPdfController;
+use App\Http\Controllers\ComplaintController;
 use Illuminate\Support\Facades\Route;
 use App\Mail\Notification;
 
@@ -73,9 +74,11 @@ Route::get('/getProductsStatistics', [ProductController::class, 'getProductsStat
 // Rutas de Administrador
 Route::get('/getAllUsers/{registersPerPage?}/{page?}', [UserController::class, 'getAllUsers'])->middleware('auth:sanctum');
 Route::get('/getAllProducts/{registersPerPage?}/{page?}', [ProductController::class, 'getAllProducts'])->middleware('auth:sanctum');
-
 Route::post('/setUserIsBanned', [UserController::class, 'setIsBanned'])->middleware('auth:sanctum');
 Route::post('/setProductIsBanned', [ProductController::class, 'setIsBanned'])->middleware('auth:sanctum');
+
+// Rutas de Denuncias
+Route::post('/createComplaint', [ComplaintController::class, 'create'])->middleware('auth:sanctum');
 
 // Rutas de calificaion de usuario
 Route::post('/setRating', [RatingsController::class, 'setRating'])->middleware('auth:sanctum');;
