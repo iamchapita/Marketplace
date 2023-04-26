@@ -99,4 +99,27 @@ class ComplaintController extends Controller
             return response()->json(['message' => 'Insercion Completa'], 200);
         }
     }
+
+    public function getAComplaint(Request $request)
+    {
+        $whereConditions = [
+            ['userIdFK', '=', $request->get('userIdFK')]
+        ];
+
+        if($request->has('userIdReported')){
+            array_push($whereConditions, ['products.isAvailable', '=', $request->get('isAvailableStatus')]);
+        }
+
+        if($request->has('productIdFK')){
+            array_push($whereConditions, ['productIdFK', '=', $request->get('productIdFK')]);
+        }
+
+        $complaint = Complaint::where($whereConditions)->get();
+
+        if ($complaint->isEmpty()) {
+            return response()->json(['message' => 'No se encontró Denuncia.'], 500);
+        } else {
+            return response()->json($complaint, 200);
+        }
+    }
 }
