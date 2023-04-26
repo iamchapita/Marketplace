@@ -262,6 +262,43 @@ class ProductController extends Controller
         }
     }
 
+    public function getPopularProducts()
+    {
+        $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
+            ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
+            ->join('directions', 'directions.userIdFK', '=', 'products.userIdFK')
+            ->join('departments', 'departments.id', '=', 'directions.departmentIdFK')
+            ->join('municipalities', 'municipalities.id', '=', 'directions.municipalityIdFK')
+            ->select(
+                'products.id',
+                'products.name',
+                'products.description',
+                'products.price',
+                'products.photos',
+                'products.status',
+                'products.isAvailable',
+                'products.isBanned',
+                'products.wasSold',
+                'products.userIdFK',
+                'products.categoryIdFK',
+                'products.created_at as createdAt',
+                'categories.name as categoryName',
+                'users.firstName as userFirstName',
+                'users.lastName as userLastName',
+                'departments.name as departmentName',
+                'municipalities.name as municipalityName'
+            )->where('products.isAvailable', '=', 1)
+            ->where('products.isBanned', '=', 0)
+            ->where('products.views', '>=', 1)
+            ->get();
+
+        if ($products->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron Productos'], 500);
+        } else {
+            return response()->json($products, 200);
+        }
+    }
+
     public function orderByProducts(Request $request)
     {
         if (!$request->has('attribute')) {
