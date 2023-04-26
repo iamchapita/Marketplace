@@ -309,6 +309,12 @@ class ProductController extends Controller
     public function getProductById(Int $id)
     {
 
+        $product = Product::find($id);
+        if ($product) {
+            $product->views += 1;
+            $product->save();
+        }
+
         $product = Product::join('users', 'users.id', '=', 'products.userIdFK')
             ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
             ->join('directions', 'directions.userIdFK', '=', 'products.userIdFK')
