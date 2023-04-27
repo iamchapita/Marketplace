@@ -290,6 +290,7 @@ class ProductController extends Controller
             )->where('products.isAvailable', '=', 1)
             ->where('products.isBanned', '=', 0)
             ->where('products.views', '>=', 1)
+            ->orderBy('products.views', 'DESC')
             ->get();
 
         if ($products->isEmpty()) {
