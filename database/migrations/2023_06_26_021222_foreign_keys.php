@@ -41,6 +41,15 @@ return new class extends Migration
             $table->foreign('userIdFK')->references('id')->on('users');
             $table->foreign('ratedUserIdFK')->references('id')->on('users');
         });
+
+        Schema::table('users_categories', function (Blueprint $table) {
+            $table->foreign('userIdFK')->references('id')->on('users');
+            $table->foreign('categoryIdFK')->references('id')->on('categories');
+        });
+
+        Schema::table('subscriptions', function (Blueprint $table) {
+            $table->foreign('usersCategoriesIdFK')->references('id')->on('users_categories');
+        });
     }
 
     /**
