@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('usersCategoriesIdFK')->unsigned();
+            $table->bigInteger('userIdFK')->unsigned()->unique();
             $table->boolean('subscriptionState')->default(true);
             $table->timestamp('subscriptionDate')->nullable()->useCurrent();
             $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();

@@ -48,7 +48,7 @@ return new class extends Migration
         });
 
         Schema::table('subscriptions', function (Blueprint $table) {
-            $table->foreign('usersCategoriesIdFK')->references('id')->on('users_categories');
+            $table->foreign('userIdFK')->references('id')->on('users');
         });
     }
 
