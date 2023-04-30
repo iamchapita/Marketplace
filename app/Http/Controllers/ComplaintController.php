@@ -35,9 +35,12 @@ class ComplaintController extends Controller
                     // Se obtiene el nombre del archivo
                     $name = explode('/', $file);
                     $name = $name[count($name) - 1];
+                    $type = explode('.', $name);
+                    $type = $type[count($type) - 1];
 
                     // Obteniendo el arreglo del nombre y el contenido del archivo
                     $fileReponse = array(
+                        'type' => $type,
                         'name' => $name,
                         'base64Image' => base64_encode($content)
                     );
@@ -140,20 +143,24 @@ class ComplaintController extends Controller
     {
         $complaintFields = [
             'complaints.id as id',
-            DB::raw('CONCAT(users.firstName, " ", users.lastName) as userName'),
+            DB::raw('CONCAT(complaintOwner.firstName, " ", complaintOwner.lastName) as complaintOwnerName'),
+            DB::raw('CONCAT(reportedUser.firstName, " ", reportedUser.lastName) as reportedUserName'),
             'products.name',
-            DB::raw('CASE WHEN wasApproved IS NULL THEN "Pendiente" ELSE IF(wasApproved = 1, "Aceptada", "Denegada") END as isAvailable'),
+            DB::raw('IF(isAwaitingResponse = 1, "Pendiente", "Revisada") as isAwaitingResponse'),
+            DB::raw('CASE WHEN wasApproved IS NULL THEN "N/D" ELSE IF(wasApproved = 1, "Aceptada", "Denegada") END as wasApproved'),
+            DB::raw('IF(complaints.updated_at IS NULL, "N/D", complaints.updated_at) as updatedAt'),
             'complaints.created_at as createdAt',
-            DB::raw('IF(complaints.updated_at IS NULL, "N/A", complaints.updated_at) as updatedAt'),
         ];
 
         if (!$page) {
-            $complaints = Complaint::join('users', 'users.id', '=', 'complaints.userIdReported')
+            $complaints = Complaint::join('users as reportedUser', 'reportedUser.id', '=', 'complaints.userIdReported')
+                ->join('users as complaintOwner', 'complaintOwner.id', '=', 'complaints.userIdFK')
                 ->join('products', 'products.id', '=', 'complaints.productIdFK')
                 ->select(...$complaintFields)
                 ->paginate(intval($registersPerPage));
         } else {
-            $complaints = Complaint::join('users', 'users.id', '=', 'complaints.userIdReported')
+            $complaints = Complaint::join('users as reportedUser', 'reportedUser.id', '=', 'complaints.userIdReported')
+                ->join('users as complaintOwner', 'complaintOwner.id', '=', 'complaints.userIdFK')
                 ->join('products', 'products.id', '=', 'complaints.productIdFK')
                 ->select(...$complaintFields)
                 ->skip(($page - 1) * $registersPerPage)
@@ -165,6 +172,54 @@ class ComplaintController extends Controller
             return response()->json(['message' => 'No se encontraron productos.'], 500);
         } else {
             return response()->json($complaints, 200);
+        }
+    }
+
+    public function getComplaintById(Request $request)
+    {
+
+        $complaint = Complaint::join('users as complaintOwner', 'complaintOwner.id', '=', 'complaints.userIdFK')
+            ->join('users as reportedUser', 'reportedUser.id', '=', 'complaints.userIdReported')
+            ->join('products', 'products.id', '=', 'complaints.productIdFK')
+            ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
+            ->join('directions as complaintOwnerDirection', 'complaintOwnerDirection.userIdFK', '=', 'complaints.userIdFK')
+            ->join('directions as reportedUserDirection', 'reportedUserDirection.userIdFK', '=', 'complaints.userIdReported')
+            ->join('departments as complaintOwnerDepartment', 'complaintOwnerDepartment.id', '=', 'complaintOwnerDirection.departmentIdFK')
+            ->join('departments as reportedUserDepartment', 'reportedUserDepartment.id', '=', 'reportedUserDirection.departmentIdFK')
+            ->join('municipalities as complaintOwnerMunicipality', 'complaintOwnerMunicipality.id', '=', 'complaintOwnerDirection.municipalityIdFK')
+            ->join('municipalities as reportedUserMunicipality', 'reportedUserMunicipality.id', '=', 'reportedUserDirection.municipalityIdFK')
+            ->select(
+                DB::raw('CONCAT(complaintOwner.firstName, " ", complaintOwner.lastName) as complaintOwnerName'),
+                'complaintOwner.email as complaintOwnerEmail',
+                'complaintOwner.isBanned as complaintOwnerIsBanned',
+                'complaintOwnerDepartment.name as complaintOwnerDeparmentName',
+                'complaintOwnerMunicipality.name as complaintOwnerMunicipalityName',
+                DB::raw('CONCAT(reportedUser.firstName, " ", reportedUser.lastName) as reportedUserName'),
+                'reportedUser.email as reportedUserEmail',
+                'reportedUser.isBanned as reportedUserIsBanned',
+                'reportedUserDepartment.name as reportedUserDeparmentName',
+                'reportedUserMunicipality.name as reportedUserMunicipalityName',
+                'products.name as productName',
+                'products.description as productDescription',
+                'products.price as productPrice',
+                'products.photos as productPhotos',
+                'products.status as productStatus',
+                'products.amount as productAmount',
+                'products.created_at as productCreatedAt',
+                'categories.name as productCategoryName',
+                'complaints.description as complaintDescription',
+                'complaints.evidences as complaintEvidences',
+                'complaints.isAwaitingResponse as complaintIsAwaitingResponse',
+                DB::raw('CASE WHEN wasApproved IS NULL THEN "N/D" ELSE IF(wasApproved = 1, "Aceptada", "Denegada") END as complaintWasApproved'),
+                'complaints.created_at as complaintCreatedAt',
+                'complaints.updated_at as complaintUpdatedAt'
+            )
+            ->find($request->get('id'));
+
+        if (is_null($complaint)) {
+            return response()->json(['message' => 'Denuncia no encontrada.'], 500);
+        } else {
+            return response()->json($complaint, 200);
         }
     }
 }
