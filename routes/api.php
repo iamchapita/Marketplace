@@ -83,6 +83,12 @@ Route::get('/getAllComplaints/{registersPerPage?}/{page?}', [ComplaintController
 Route::post('/setUserIsBanned', [UserController::class, 'setIsBanned'])->middleware('auth:sanctum');
 // Bannear Producto
 Route::post('/setProductIsBanned', [ProductController::class, 'setIsBanned'])->middleware('auth:sanctum');
+// Producto Vendidos
+Route::get('/getProductoVendidos', [ProductController::class, 'getProductosVendido']);
+// Usuarios ActivosSS
+Route::get('getActiveUsers', [UserController::class, 'getActiveUsers']);
+Route::get('getActiveUsers6Month', [UserController::class, 'getActiveUsers6Month']);
+Route::get('getActiveUsers1yeart', [UserController::class, 'getActiveUsers1yeart']);
 
 // Rutas de Denuncias
 Route::post('/createComplaint', [ComplaintController::class, 'create'])->middleware('auth:sanctum');

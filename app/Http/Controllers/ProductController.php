@@ -663,4 +663,22 @@ class ProductController extends Controller
             return response()->json($products, 200);
         }
     }
+
+    public function getProductosVendido() {
+        $results = DB::table('products as p')
+        ->select('p.name', DB::raw('SUM(p.amount) as Total_ProductosVendidos'), 'd.name as departamento')
+        ->join('users as u', 'u.id', '=', 'p.userIdFK')
+        ->join('directions as di', 'di.userIdFK', '=', 'u.id')
+        ->join('departments as d', 'd.id', '=', 'di.departmentIdFK')
+        ->where('p.wasSold', 1)
+        ->groupBy('p.name', 'd.name')
+        ->orderByDesc('Total_ProductosVendidos')
+        ->get();
+    
+    
+    
+        return $results;
+    }
+    
+    
 }

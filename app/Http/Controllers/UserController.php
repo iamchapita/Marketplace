@@ -12,6 +12,8 @@ use App\Models\Direction;
 use App\Models\Municipality;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 
 class UserController extends Controller
 {
@@ -241,4 +243,34 @@ class UserController extends Controller
             return response()->json(['message' => 'No se encontró el Usuario'], 500);
         }
     }
+
+
+    public function getActiveUsers(Request $request)
+    {
+        $activeUsers30Days = user::select('firstName')
+    ->where('isEnabled', 1)
+    ->where('created_at', '>=', Carbon::now()->subDays(30))
+    ->get();
+    }
+
+    public function getActiveUsers6Month(Request $request)
+    {
+        $active6Months = User::where('isEnabled', 1)
+        ->whereDate('created_at', '>=', Carbon::now()->subMonths(6))
+        ->select('firstName')
+        ->get();
+
+    return view('active-users', compact('active6Months'));
+    }
+
+    public function getActiveUsers1yeart(Request $request)
+    {
+        $activeUsers = User::where('isEnabled', 1)
+        ->where('created_at', '>=', now()->subYear())
+        ->get(['firstName']);
+
+    }
+
+
+
 }
