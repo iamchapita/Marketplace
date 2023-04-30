@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Complaint;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class ComplaintController extends Controller
 {
@@ -106,11 +107,11 @@ class ComplaintController extends Controller
             ['userIdFK', '=', $request->get('userIdFK')]
         ];
 
-        if($request->has('userIdReported')){
+        if ($request->has('userIdReported')) {
             array_push($whereConditions, ['products.isAvailable', '=', $request->get('isAvailableStatus')]);
         }
 
-        if($request->has('productIdFK')){
+        if ($request->has('productIdFK')) {
             array_push($whereConditions, ['productIdFK', '=', $request->get('productIdFK')]);
         }
 
@@ -120,6 +121,50 @@ class ComplaintController extends Controller
             return response()->json(['message' => 'No se encontró Denuncia.'], 500);
         } else {
             return response()->json($complaint, 200);
+        }
+    }
+
+    public function getComplaintsStatistics()
+    {
+        $complaintsStatistics = Complaint::select(
+            DB::raw('COUNT(*) AS total'),
+            DB::raw('COUNT(wasApproved) AS approvedComplaints'),
+            DB::raw('COUNT(*) - COUNT(wasApproved) AS pendingComplaints')
+        )->first();
+
+
+        return response()->json($complaintsStatistics, 200);
+    }
+
+    public function getAllComplaints($registersPerPage = null, $page = null)
+    {
+        $complaintFields = [
+            'complaints.id as id',
+            DB::raw('CONCAT(users.firstName, " ", users.lastName) as userName'),
+            'products.name',
+            DB::raw('CASE WHEN wasApproved IS NULL THEN "Pendiente" ELSE IF(wasApproved = 1, "Aceptada", "Denegada") END as isAvailable'),
+            'complaints.created_at as createdAt',
+            DB::raw('IF(complaints.updated_at IS NULL, "N/A", complaints.updated_at) as updatedAt'),
+        ];
+
+        if (!$page) {
+            $complaints = Complaint::join('users', 'users.id', '=', 'complaints.userIdReported')
+                ->join('products', 'products.id', '=', 'complaints.productIdFK')
+                ->select(...$complaintFields)
+                ->paginate(intval($registersPerPage));
+        } else {
+            $complaints = Complaint::join('users', 'users.id', '=', 'complaints.userIdReported')
+                ->join('products', 'products.id', '=', 'complaints.productIdFK')
+                ->select(...$complaintFields)
+                ->skip(($page - 1) * $registersPerPage)
+                ->take($registersPerPage)
+                ->get();
+        }
+
+        if ($complaints->isEmpty()) {
+            return response()->json(['message' => 'No se encontraron productos.'], 500);
+        } else {
+            return response()->json($complaints, 200);
         }
     }
 }

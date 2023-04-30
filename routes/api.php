@@ -70,11 +70,18 @@ Route::get('/buscaproduct', [ProductController::class, 'buscaproduct']);
 // Rutas de estadisticas
 Route::get('/getUsersStatistics', [UserController::class, 'getUsersStatistics'])->middleware('auth:sanctum');
 Route::get('/getProductsStatistics', [ProductController::class, 'getProductsStatistics'])->middleware('auth:sanctum');
+Route::get('/getComplaintsStatistics', [ComplaintController::class, 'getComplaintsStatistics'])->middleware('auth:sanctum');
 
 // Rutas de Administrador
+// Usuarios
 Route::get('/getAllUsers/{registersPerPage?}/{page?}', [UserController::class, 'getAllUsers'])->middleware('auth:sanctum');
+// Productos
 Route::get('/getAllProducts/{registersPerPage?}/{page?}', [ProductController::class, 'getAllProducts'])->middleware('auth:sanctum');
+// Denuncias
+Route::get('/getAllComplaints/{registersPerPage?}/{page?}', [ComplaintController::class, 'getAllComplaints'])->middleware('auth:sanctum');
+// Bannear Usuarios
 Route::post('/setUserIsBanned', [UserController::class, 'setIsBanned'])->middleware('auth:sanctum');
+// Bannear Producto
 Route::post('/setProductIsBanned', [ProductController::class, 'setIsBanned'])->middleware('auth:sanctum');
 
 // Rutas de Denuncias
