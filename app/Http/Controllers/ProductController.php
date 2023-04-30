@@ -624,9 +624,6 @@ class ProductController extends Controller
         return response()->json($consulta, 200);
     }
 
-    //$pdf = new FPDF();
-    //$pdf->AddPage();
-
     public function getProductsStatistics()
     {
         $productsStatistics = Product::select(
