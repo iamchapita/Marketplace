@@ -228,13 +228,10 @@ class UserController extends Controller
     {
         $user = User::where('id', $request->only('id'))->first();
 
-        $products =  Product::where('userIdFK', $request->only('id'))->get();
-
         if ($user) {
 
-            if (!$products->isEmpty()) {
-                $products->update(['isAvailable' => intval($request->get('isBanned')) == 1 ? 0 : 1]);
-            }
+            Product::where('userIdFK', $request->only('id'))
+                ->update(['isAvailable' => intval($request->get('isBanned')) == 1 ? 0 : 1]);
 
             $user->isBanned = intval($request->get('isBanned'));
             $user->save();
