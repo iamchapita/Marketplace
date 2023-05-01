@@ -10,6 +10,7 @@ use App\Http\Controllers\WishListController;
 use App\Http\Controllers\RatingsController;
 use App\Http\Controllers\ProductPdfController;
 use App\Http\Controllers\ComplaintController;
+use App\Http\Controllers\UsersCategoriesController;
 use Illuminate\Support\Facades\Route;
 use App\Mail\Notification;
 
@@ -98,6 +99,9 @@ Route::post('/getComplaintById', [ComplaintController::class, 'getComplaintById'
 // Rutas de calificaion de usuario
 Route::post('/setRating', [RatingsController::class, 'setRating'])->middleware('auth:sanctum');;
 Route::post('/getRating', [RatingsController::class, 'getRating']);
+
+// Rutas de Suscripciones
+Route::post('/subscription', [UsersCategoriesController::class, 'store']);
 
 //Envia el Correo
 Route::get('/send', function () {
