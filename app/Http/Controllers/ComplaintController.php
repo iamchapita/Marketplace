@@ -189,14 +189,18 @@ class ComplaintController extends Controller
             ->join('municipalities as complaintOwnerMunicipality', 'complaintOwnerMunicipality.id', '=', 'complaintOwnerDirection.municipalityIdFK')
             ->join('municipalities as reportedUserMunicipality', 'reportedUserMunicipality.id', '=', 'reportedUserDirection.municipalityIdFK')
             ->select(
+                'complaintOwner.id AS complaintOwnerId',
                 DB::raw('CONCAT(complaintOwner.firstName, " ", complaintOwner.lastName) as complaintOwnerName'),
                 'complaintOwner.email as complaintOwnerEmail',
                 'complaintOwner.isBanned as complaintOwnerIsBanned',
+                'complaintOwner.raiting as complaintOwnerRating',
                 'complaintOwnerDepartment.name as complaintOwnerDeparmentName',
                 'complaintOwnerMunicipality.name as complaintOwnerMunicipalityName',
+                'reportedUser.id AS reportedUserId',
                 DB::raw('CONCAT(reportedUser.firstName, " ", reportedUser.lastName) as reportedUserName'),
                 'reportedUser.email as reportedUserEmail',
                 'reportedUser.isBanned as reportedUserIsBanned',
+                'reportedUser.raiting as reportedUserRating',
                 'reportedUserDepartment.name as reportedUserDeparmentName',
                 'reportedUserMunicipality.name as reportedUserMunicipalityName',
                 'products.name as productName',
