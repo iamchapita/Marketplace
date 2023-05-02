@@ -347,12 +347,6 @@ class ProductController extends Controller
     public function getProductById(Int $id)
     {
 
-        $product = Product::find($id);
-        if ($product) {
-            $product->views += 1;
-            $product->save();
-        }
-
         $product = Product::join('users', 'users.id', '=', 'products.userIdFK')
             ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
             ->join('directions', 'directions.userIdFK', '=', 'products.userIdFK')
@@ -370,6 +364,7 @@ class ProductController extends Controller
                 'products.isBanned',
                 'products.wasSold',
                 'products.userIdFK',
+                'products.views',
                 'products.categoryIdFK',
                 'categories.name as categoryName',
                 'users.id as userId',
@@ -380,12 +375,13 @@ class ProductController extends Controller
             )
             ->find($id);
 
-
         if (is_null($product)) {
             return response()->json(['message' => 'Producto no encontrado'], 500);
+        } else {
+            $product->views += 1;
+            $product->save();
+            return response()->json($product, 200);
         }
-
-        return response()->json($product, 200);
     }
 
     public function getProductsBySeller(Request $request)
@@ -664,21 +660,18 @@ class ProductController extends Controller
         }
     }
 
-    public function getProductosVendido() {
+    public function getProductosVendido()
+    {
         $results = DB::table('products as p')
-        ->select('p.name', DB::raw('SUM(p.amount) as Total_ProductosVendidos'), 'd.name as departamento')
-        ->join('users as u', 'u.id', '=', 'p.userIdFK')
-        ->join('directions as di', 'di.userIdFK', '=', 'u.id')
-        ->join('departments as d', 'd.id', '=', 'di.departmentIdFK')
-        ->where('p.wasSold', 1)
-        ->groupBy('p.name', 'd.name')
-        ->orderByDesc('Total_ProductosVendidos')
-        ->get();
-    
-    
-    
+            ->select('p.name', DB::raw('SUM(p.amount) as Total_ProductosVendidos'), 'd.name as departamento')
+            ->join('users as u', 'u.id', '=', 'p.userIdFK')
+            ->join('directions as di', 'di.userIdFK', '=', 'u.id')
+            ->join('departments as d', 'd.id', '=', 'di.departmentIdFK')
+            ->where('p.wasSold', 1)
+            ->groupBy('p.name', 'd.name')
+            ->orderByDesc('Total_ProductosVendidos')
+            ->get();
+
         return $results;
     }
-    
-    
 }
