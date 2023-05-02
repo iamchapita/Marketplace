@@ -3,8 +3,35 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Subscription;
+
 
 class SubscriptionController extends Controller
 {
     //
+    public function state(Request $request)
+    {
+        $userId = $request->get('userIdFk');
+        $subscriptionState = $request->input('subscriptionState');
+
+        // Validar que el valor de userIdFk no sea nulo
+        if (empty($userId)) {
+            return response()->json(['error' => 'El valor de userIdFk es nulo.'], 400);
+        }
+
+        // Actualizar la suscripción existente o crear una nueva
+        $subscription = Subscription::where('userIdFk', $userId)->first();
+        if ($subscription) {
+            $subscription->subscriptionState = $subscriptionState;
+            $subscription->save();
+        } else {
+            Subscription::create([
+                'userIdFk' => $userId,
+                'subscriptionState' => $subscriptionState,
+            ]);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
 }

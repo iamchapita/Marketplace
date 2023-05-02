@@ -11,6 +11,7 @@ use App\Http\Controllers\RatingsController;
 use App\Http\Controllers\ProductPdfController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\UsersCategoriesController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 use App\Mail\Notification;
 
@@ -102,6 +103,7 @@ Route::post('/getRating', [RatingsController::class, 'getRating']);
 
 // Rutas de Suscripciones
 Route::post('/subscription', [UsersCategoriesController::class, 'store']);
+Route::post('/state', [SubscriptionController::class, 'state']);
 
 //Envia el Correo
 Route::get('/send', function () {
