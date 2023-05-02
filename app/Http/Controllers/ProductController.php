@@ -674,7 +674,6 @@ class ProductController extends Controller
 
         return $results;
     }
-<<<<<<< HEAD
 
     public function getProductsInsertadosMes(){
         $results = DB::table('products')
@@ -692,8 +691,4 @@ class ProductController extends Controller
         return $results;
     
     }
-    
-    
-=======
->>>>>>> 153344ba722a37e5d68b16123d02a1b3f79f38ac
 }
