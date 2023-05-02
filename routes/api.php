@@ -87,6 +87,8 @@ Route::post('/setUserIsBanned', [UserController::class, 'setIsBanned'])->middlew
 Route::post('/setProductIsBanned', [ProductController::class, 'setIsBanned'])->middleware('auth:sanctum');
 // Producto Vendidos
 Route::get('/getProductoVendidos', [ProductController::class, 'getProductosVendido']);
+// Producto Insertados por mes año y dia
+Route::get('/getProductsInsertadosMes', [ProductController::class, 'getProductsInsertadosMes']);
 // Usuarios ActivosSS
 Route::get('getActiveUsers', [UserController::class, 'getActiveUsers']);
 Route::get('getActiveUsers6Month', [UserController::class, 'getActiveUsers6Month']);

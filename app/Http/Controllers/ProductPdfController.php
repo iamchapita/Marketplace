@@ -90,4 +90,9 @@ class ProductPdfController extends Controller
         // Descargar el PDF
         return $pdf->download('Prueba.pdf');
     }
+
+  
+
+
+
 }
