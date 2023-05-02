@@ -175,6 +175,20 @@ class ComplaintController extends Controller
         }
     }
 
+    public function getComplaintEvidences(Request $request)
+    {
+        $imagesToObtain = $request->has('imagesToObtain') ? $request->get('imagesToObtain') : 0;
+        $path = $request->get('path');
+
+        $result = $this->base64Encode($path, $imagesToObtain);
+
+        if (count($result) > 0) {
+            return response()->json($result, 200);
+        } else {
+            return response()->json(['message' => 'No se encontraron imágenes.'], 500);
+        }
+    }
+
     public function getComplaintById(Request $request)
     {
 
@@ -203,11 +217,15 @@ class ComplaintController extends Controller
                 'reportedUser.raiting as reportedUserRating',
                 'reportedUserDepartment.name as reportedUserDeparmentName',
                 'reportedUserMunicipality.name as reportedUserMunicipalityName',
+                'products.id as productId',
                 'products.name as productName',
                 'products.description as productDescription',
                 'products.price as productPrice',
                 'products.photos as productPhotos',
                 'products.status as productStatus',
+                'products.isBanned as productIsBanned',
+                'products.isAvailable as productIsAvailable',
+                'products.wasSold as productWasSold',
                 'products.amount as productAmount',
                 'products.created_at as productCreatedAt',
                 'categories.name as productCategoryName',
