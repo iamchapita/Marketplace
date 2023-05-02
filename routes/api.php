@@ -97,7 +97,7 @@ Route::get('getActiveUsers1yeart', [UserController::class, 'getActiveUsers1yeart
 // Rutas de Denuncias
 Route::post('/createComplaint', [ComplaintController::class, 'create'])->middleware('auth:sanctum');
 Route::post('/getAComplaint', [ComplaintController::class, 'getAComplaint'])->middleware('auth:sanctum');
-Route::post('/getComplaintById', [ComplaintController::class, 'getComplaintById'])->middleware('auth:sanctum');
+Route::post('/getComplaintById', [ComplaintController::class, 'getComplaintById']);
 
 // Rutas de calificaion de usuario
 Route::post('/setRating', [RatingsController::class, 'setRating'])->middleware('auth:sanctum');;
