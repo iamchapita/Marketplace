@@ -66,7 +66,7 @@ class ProductPdfController extends Controller
             ->where('userIdFK', '=', $userId)
             ->first();
 
-        if (!$subscription || $subscription->subscriptionState == 'active') {
+        if (!$subscription || $subscription->subscriptionState == '0') {
             return response()->json(['message' => 'El usuario no está suscrito'], 403);
         }
         // Obtener las categorías a las que el usuario está suscrito
