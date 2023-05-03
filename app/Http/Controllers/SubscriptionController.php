@@ -34,4 +34,20 @@ class SubscriptionController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function getSubscription(Request $request)
+    {
+        $userId = $request->get('userIdFK');
+
+        $subscription = Subscription::select(
+            'subscriptions.userIdFK',
+            'subscriptions.subscriptionState'
+        )->where('subscriptions.userIdFK', '=', $userId)->get();
+
+        if ($subscription->isEmpty()){
+            return response()->json(['message' => 'Nohay subscripcion'], 500);
+        } else {
+            return response()->json($subscription, 200);
+        }
+    }
+
 }

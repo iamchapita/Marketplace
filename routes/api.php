@@ -106,7 +106,9 @@ Route::post('/getRating', [RatingsController::class, 'getRating']);
 
 // Rutas de Suscripciones
 Route::post('/subscription', [UsersCategoriesController::class, 'store']);
+Route::get('/getSubscription', [UsersCategoriesController::class, 'getSubscriptionCategory']);
 Route::post('/state', [SubscriptionController::class, 'state']);
+Route::get('/getState', [SubscriptionController::class, 'getSubscription']);
 
 //Envia el Correo
 Route::get('/send', function () {

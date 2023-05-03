@@ -46,6 +46,22 @@ class UsersCategoriesController extends Controller
         return response()->json(['message' => 'Suscripciones guardadas exitosamente.']);
     }
 
+    public function getSubscriptionCategory(Request $request)
+    {
+        $userId = $request->get('userIdFK');
+
+        $categories = UsersCategories::select(
+            'users_categories.userIdFK',
+            'users_categories.categoryIdFK'
+        )->where('users_categories.userIdFK', '=', $userId)->get();
+
+        if ($categories->isEmpty()){
+            return response()->json(['message' => 'Categorias sin Suscribir'], 500);
+        } else {
+            return response()->json($categories, 200);
+        }
+    }
 
 }
+
 
