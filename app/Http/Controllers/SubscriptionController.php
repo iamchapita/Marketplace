@@ -25,7 +25,7 @@ class SubscriptionController extends Controller
             $subscription->subscriptionState = $subscriptionState;
             $subscription->save();
         } else {
-            Subscription::create([
+            Subscription::insert([
                 'userIdFk' => $userId,
                 'subscriptionState' => $subscriptionState,
             ]);
