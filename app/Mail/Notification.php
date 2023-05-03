@@ -18,8 +18,8 @@ class Notification extends Mailable
     public function build()
     {
     return $this->view('mail')
-                ->attach(storage_path('app/public/pdf/Prueba.pdf'), [
-                    'as' => 'Prueba.pdf',
+                ->attach(storage_path('app/public/pdf/Productos_Categorias_Favoritas.pdf'), [
+                    'as' => 'Productos_Categorias_Favoritas.pdf',
                     'mime' => 'application/pdf',
                 ]);
     }

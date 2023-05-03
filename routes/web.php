@@ -15,3 +15,10 @@ use App\Mail\Notification;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/pdf', [ProductPdfController::class, 'generatePdf']);
+
+//Envia el Correo
+Route::get('/send', function () {
+    Mail::to(['edusalgado00@gmail.com', 'alejandrom646@gmail.com', 'isacantarero29@gmail.com'])->send(new Notification());
+    return response()->json(['message' => 'Correo Enviado']);
+});

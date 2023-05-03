@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Subscription;
+use App\Models\UsersCategories;
 use App\Http\Controllers\Controller;
 use Dompdf\Dompdf;
 use Illuminate\Http\Request;
@@ -57,9 +59,26 @@ class ProductPdfController extends Controller
 
     public function generatePdf(Request $request)
     {
-        // Obtener los productos con el código que proporcionaste
+        // Obtener el ID del usuario autenticado
+        $userId = $request->get('userIdFK');
+        // Verificar si el usuario está suscrito
+        $subscription = Subscription::select('subscriptionState')
+            ->where('userIdFK', '=', $userId)
+            ->first();
+
+        if (!$subscription || $subscription->subscriptionState == 'active') {
+            return response()->json(['message' => 'El usuario no está suscrito'], 403);
+        }
+        // Obtener las categorías a las que el usuario está suscrito
+        $categories = UsersCategories::select('categoryIdFK')
+            ->where('userIdFK', '=', $userId)
+            ->get()
+            ->pluck('categoryIdFK')
+            ->toArray();
+        // Obtener los productos de las categorías a las que el usuario está suscrito
         $products = Product::join('users', 'users.id', '=', 'products.userIdFK')
             ->join('categories', 'categories.id', '=', 'products.categoryIdFK')
+            ->whereIn('products.categoryIdFK', $categories)
             ->where('products.isBanned', '=', '0')
             ->where('products.isAvailable', '=', '1')
             ->select(
@@ -73,23 +92,20 @@ class ProductPdfController extends Controller
             ->get();
 
         foreach ($products as $product) {
-
             $product->photos = $this->base64Encode($product->photos, 1);
         }
-
-        // return $products;
-
         // Generar la vista con los productos
         $pdf = new Dompdf();
         $pdf = PDF::loadView('product-pdf', compact('products'));
 
         // Guardar el PDF en la carpeta de almacenamiento de Laravel
         $pdfContent = $pdf->output();
-        Storage::disk('public')->put('pdf' . DIRECTORY_SEPARATOR . 'Prueba.pdf', $pdfContent);
+        Storage::disk('public')->put('pdf' . DIRECTORY_SEPARATOR . 'Productos_Categorias_Favoritas.pdf', $pdfContent);
 
         // Descargar el PDF
-        return $pdf->download('Prueba.pdf');
+        return $pdf->download('Productos_Categorias_Favoritas.pdf');
     }
+
 
   
 

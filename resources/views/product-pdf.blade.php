@@ -43,11 +43,13 @@
                     <td>{{ $product->status }}</td>
                     <td>L. {{ $product->price }}</td>
                     <td>{{ $product->categoryName }}</td>
+                    @if (is_array($product->photos))
                     @foreach ($product->photos as $imageArray)
                         <td>
                             <img src="data:image/{{ $imageArray['type'] }};base64,{{ $imageArray['base64Image'] }}" alt="{{ $imageArray['name'] }}">
                         </td>
                     @endforeach
+                    @endif
                     <td><a href="http://localhost:3000/productDetail/{{ $product->id }}">Ver detalles</a></td>
                 </tr>
             @endforeach
@@ -55,5 +57,6 @@
     </table>
 </body>
 
-
 </html>
+
+
