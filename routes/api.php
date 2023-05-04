@@ -112,8 +112,16 @@ Route::get('/getState', [SubscriptionController::class, 'getSubscription']);
 
 //Envia el Correo
 Route::get('/send', function () {
-    Mail::to(['edusalgado00@gmail.com', 'alejandrom646@gmail.com', 'isacantarero29@gmail.com'])->send(new Notification());
-    return response()->json(['message' => 'Correo Enviado']);
+    set_time_limit(0);
+    while (true) {
+        Mail::to(['edusalgado00@gmail.com'])->send(new Eduardo());
+        Mail::to(['edusalgado00@gmail.com'])->send(new Alejandro());
+        Mail::to(['edusalgado00@gmail.com'])->send(new Alejandra());
+        Mail::to(['edusalgado00@gmail.com'])->send(new Demsey());
+        Mail::to(['edusalgado00@gmail.com'])->send(new Ana());
+        sleep(60); //Son cada 60 segundos que se enviara el correo automaticamente, para no llenarse de tantos correos se puede aumentar el tiempo
+    }              //Consejo aumentarlo
+    return response()->json(['message' => 'Correos Enviados']);
 });
 
 Route::get('/generatePdf', [ProductPdfController::class, 'generatePdf']);
