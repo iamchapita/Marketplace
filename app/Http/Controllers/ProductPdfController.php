@@ -100,7 +100,7 @@ class ProductPdfController extends Controller
 
         // Guardar el PDF en la carpeta de almacenamiento de Laravel
         $pdfContent = $pdf->output();
-        Storage::disk('public')->put('pdf' . DIRECTORY_SEPARATOR . 'Productos_Categorias_Favoritas.pdf', $pdfContent);
+        Storage::disk('public')->put('pdf' . DIRECTORY_SEPARATOR . $userId . '_Productos_Categorias_Favoritas.pdf', $pdfContent);
 
         // Descargar el PDF
         return $pdf->download('Productos_Categorias_Favoritas.pdf');

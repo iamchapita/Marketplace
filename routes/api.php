@@ -124,4 +124,4 @@ Route::get('/send', function () {
     return response()->json(['message' => 'Correos Enviados']);
 });
 
-Route::get('/generatePdf', [ProductPdfController::class, 'generatePdf']);
+Route::get('/pdf', [ProductPdfController::class, 'generatePdf']);
