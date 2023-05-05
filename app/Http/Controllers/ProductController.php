@@ -677,16 +677,16 @@ class ProductController extends Controller
 
     public function getProductsInsertadosMes(){
         $results = DB::table('products')
-        ->select(
-        DB::raw("DATE_FORMAT(products.created_at, '%Y-%m-%d') AS fecha_creacion"),
-        DB::raw("MONTHNAME(products.created_at) AS nombre_mes"),
-        DB::raw("MONTH(products.created_at) AS numero_mes"),
-        DB::raw("DAY(products.created_at) AS Día"),
-        DB::raw("YEAR(products.created_at) AS Año"),
-        'products.name AS Nombre'
-        )
-        ->orderByRaw('MONTH(products.created_at)')
-        ->get();
+    ->select(
+        DB::raw("YEAR(created_at) AS Ano"),
+        DB::raw("MONTH(created_at) AS numero_mes"),
+        DB::raw("MONTHNAME(created_at) AS nombre_mes"),
+        DB::raw("COUNT(*) AS total_productos")
+    )
+    ->groupBy(DB::raw("YEAR(created_at), MONTH(created_at), MONTHNAME(created_at)"))
+    ->orderByRaw('MONTH(created_at)')
+    ->get();
+
     
         return $results;
     
