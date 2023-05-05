@@ -78,9 +78,9 @@ Route::get('/getComplaintsStatistics', [ComplaintController::class, 'getComplain
 // Usuarios
 Route::get('/getAllUsers/{registersPerPage?}/{searchTerm?}/{page?}', [UserController::class, 'getAllUsers'])->middleware('auth:sanctum');
 // Productos
-Route::get('/getAllProducts/{registersPerPage?}/{page?}', [ProductController::class, 'getAllProducts'])->middleware('auth:sanctum');
+Route::get('/getAllProducts/{registersPerPage?}/{searchTerm?}/{page?}', [ProductController::class, 'getAllProducts'])->middleware('auth:sanctum');
 // Denuncias
-Route::get('/getAllComplaints/{registersPerPage?}/{page?}', [ComplaintController::class, 'getAllComplaints'])->middleware('auth:sanctum');
+Route::get('/getAllComplaints/{registersPerPage?}/{searchTerm?}/{page?}', [ComplaintController::class, 'getAllComplaints'])->middleware('auth:sanctum');
 // Bannear Usuarios
 Route::post('/setUserIsBanned', [UserController::class, 'setIsBanned'])->middleware('auth:sanctum');
 // Bannear Producto

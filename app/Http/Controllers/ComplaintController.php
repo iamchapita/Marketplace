@@ -139,7 +139,7 @@ class ComplaintController extends Controller
         return response()->json($complaintsStatistics, 200);
     }
 
-    public function getAllComplaints($registersPerPage = null, $page = null)
+    public function getAllComplaints($registersPerPage = null, $searchTerm = null, $page = null)
     {
         $complaintFields = [
             'complaints.id as id',
@@ -157,12 +157,20 @@ class ComplaintController extends Controller
                 ->join('users as complaintOwner', 'complaintOwner.id', '=', 'complaints.userIdFK')
                 ->join('products', 'products.id', '=', 'complaints.productIdFK')
                 ->select(...$complaintFields)
+                ->where(function ($query) use ($searchTerm) {
+                    $query->where(DB::raw('CONCAT(complaintOwner.firstName, " ", complaintOwner.lastName)'), 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere(DB::raw('CONCAT(reportedUser.firstName, " ", reportedUser.lastName)'), 'LIKE', '%' . $searchTerm . '%');
+                })
                 ->paginate(intval($registersPerPage));
         } else {
             $complaints = Complaint::join('users as reportedUser', 'reportedUser.id', '=', 'complaints.userIdReported')
                 ->join('users as complaintOwner', 'complaintOwner.id', '=', 'complaints.userIdFK')
                 ->join('products', 'products.id', '=', 'complaints.productIdFK')
                 ->select(...$complaintFields)
+                ->where(function ($query) use ($searchTerm) {
+                    $query->where(DB::raw('CONCAT(complaintOwner.firstName, " ", complaintOwner.lastName)'), 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere(DB::raw('CONCAT(reportedUser.firstName, " ", reportedUser.lastName)'), 'LIKE', '%' . $searchTerm . '%');
+                })
                 ->skip(($page - 1) * $registersPerPage)
                 ->take($registersPerPage)
                 ->get();
@@ -174,6 +182,7 @@ class ComplaintController extends Controller
             return response()->json($complaints, 200);
         }
     }
+
 
     public function getComplaintEvidences(Request $request)
     {

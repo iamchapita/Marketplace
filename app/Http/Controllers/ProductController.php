@@ -629,7 +629,7 @@ class ProductController extends Controller
         return response()->json($productsStatistics, 200);
     }
 
-    public function getAllProducts($registersPerPage = null, $page = null)
+    public function getAllProducts($registersPerPage = null, $searchTerm = null, $page = null)
     {
         $productFields = [
             'id',
@@ -645,9 +645,15 @@ class ProductController extends Controller
 
         if (!$page) {
             $products = Product::select(...$productFields)
+                ->where(function ($query) use ($searchTerm) {
+                    $query->where('name', 'LIKE', '%' . $searchTerm . '%');
+                })
                 ->paginate(intval($registersPerPage));
         } else {
             $products = Product::select(...$productFields)
+                ->where(function ($query) use ($searchTerm) {
+                    $query->where('name', 'LIKE', '%' . $searchTerm . '%');
+                })
                 ->skip(($page - 1) * $registersPerPage)
                 ->take($registersPerPage)
                 ->get();
@@ -675,20 +681,20 @@ class ProductController extends Controller
         return $results;
     }
 
-    public function getProductsInsertadosMes(){
+    public function getProductsInsertadosMes()
+    {
         $results = DB::table('products')
-    ->select(
-        DB::raw("YEAR(created_at) AS Ano"),
-        DB::raw("MONTH(created_at) AS numero_mes"),
-        DB::raw("MONTHNAME(created_at) AS nombre_mes"),
-        DB::raw("COUNT(*) AS total_productos")
-    )
-    ->groupBy(DB::raw("YEAR(created_at), MONTH(created_at), MONTHNAME(created_at)"))
-    ->orderByRaw('MONTH(created_at)')
-    ->get();
+            ->select(
+                DB::raw("YEAR(created_at) AS Ano"),
+                DB::raw("MONTH(created_at) AS numero_mes"),
+                DB::raw("MONTHNAME(created_at) AS nombre_mes"),
+                DB::raw("COUNT(*) AS total_productos")
+            )
+            ->groupBy(DB::raw("YEAR(created_at), MONTH(created_at), MONTHNAME(created_at)"))
+            ->orderByRaw('MONTH(created_at)')
+            ->get();
 
-    
+
         return $results;
-    
     }
 }
