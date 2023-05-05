@@ -76,7 +76,7 @@ Route::get('/getComplaintsStatistics', [ComplaintController::class, 'getComplain
 
 // Rutas de Administrador
 // Usuarios
-Route::get('/getAllUsers/{registersPerPage?}/{page?}', [UserController::class, 'getAllUsers'])->middleware('auth:sanctum');
+Route::get('/getAllUsers/{registersPerPage?}/{searchTerm?}/{page?}', [UserController::class, 'getAllUsers'])->middleware('auth:sanctum');
 // Productos
 Route::get('/getAllProducts/{registersPerPage?}/{page?}', [ProductController::class, 'getAllProducts'])->middleware('auth:sanctum');
 // Denuncias

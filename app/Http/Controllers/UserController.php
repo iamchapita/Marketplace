@@ -200,7 +200,7 @@ class UserController extends Controller
         return response()->json($usersStatistics, 200);
     }
 
-    public function getAllUsers($registersPerPage = null, $page = null)
+    public function getAllUsers($registersPerPage = null, $searchTerm = null, $page = null)
     {
         $fields = [
             'id',
@@ -211,10 +211,22 @@ class UserController extends Controller
             DB::raw('IF(users.isEnabled = 1, "Activo", "Desactivado") as userIsEnabled'),
         ];
 
+        // return response()->json([$registersPerPage, $searchTerm, $page]);
+
         if (!$page) {
-            $users = User::select(...$fields)->where('isAdmin', '=', '0')->paginate(intval($registersPerPage));
+            $users = User::select(...$fields)
+                ->where('isAdmin', '=', '0')
+                ->where(function ($query) use ($searchTerm) {
+                    $query->where(DB::raw('CONCAT(firstName, " ", lastName)'), 'LIKE', '%' . $searchTerm . '%');
+                })
+                ->paginate(intval($registersPerPage));
         } else {
-            $users = User::select(...$fields)->where('isAdmin', '=', '0')->skip(($page - 1) * $registersPerPage)
+            $users = User::select(...$fields)
+                ->where('isAdmin', '=', '0')
+                ->where(function ($query) use ($searchTerm) {
+                    $query->where(DB::raw('CONCAT(firstName, " ", lastName)'), 'LIKE', '%' . $searchTerm . '%');
+                })
+                ->skip(($page - 1) * $registersPerPage)
                 ->take($registersPerPage)
                 ->get();
         }
@@ -225,6 +237,7 @@ class UserController extends Controller
             return response()->json($users, 200);
         }
     }
+
 
     public function setIsBanned(Request $request)
     {
@@ -248,29 +261,25 @@ class UserController extends Controller
     public function getActiveUsers(Request $request)
     {
         $activeUsers30Days = user::select('firstName')
-    ->where('isEnabled', 1)
-    ->where('created_at', '>=', Carbon::now()->subDays(30))
-    ->get();
+            ->where('isEnabled', 1)
+            ->where('created_at', '>=', Carbon::now()->subDays(30))
+            ->get();
     }
 
     public function getActiveUsers6Month(Request $request)
     {
         $active6Months = User::where('isEnabled', 1)
-        ->whereDate('created_at', '>=', Carbon::now()->subMonths(6))
-        ->select('firstName')
-        ->get();
+            ->whereDate('created_at', '>=', Carbon::now()->subMonths(6))
+            ->select('firstName')
+            ->get();
 
-    return view('active-users', compact('active6Months'));
+        return view('active-users', compact('active6Months'));
     }
 
     public function getActiveUsers1yeart(Request $request)
     {
         $activeUsers = User::where('isEnabled', 1)
-        ->where('created_at', '>=', now()->subYear())
-        ->get(['firstName']);
-
+            ->where('created_at', '>=', now()->subYear())
+            ->get(['firstName']);
     }
-
-
-
 }
