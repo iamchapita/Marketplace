@@ -244,4 +244,18 @@ class ComplaintController extends Controller
             return response()->json($complaint, 200);
         }
     }
+
+    public function setWasApproved(Request $request)
+    {
+        $complaint = Complaint::find($request->get('id'));
+
+        if (is_null($complaint)) {
+            return response()->json(['message' => 'Denuncia no encontrada.'], 500);
+        } else {
+            $complaint->wasApproved = $request->get('wasApproved');
+            $complaint->isAwaitingResponse = false;
+            $complaint->save();
+            return response()->json($complaint, 200);
+        }
+    }
 }

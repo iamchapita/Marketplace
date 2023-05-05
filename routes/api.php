@@ -99,6 +99,7 @@ Route::post('/createComplaint', [ComplaintController::class, 'create'])->middlew
 Route::post('/getAComplaint', [ComplaintController::class, 'getAComplaint'])->middleware('auth:sanctum');
 Route::post('/getComplaintById', [ComplaintController::class, 'getComplaintById']);
 Route::post('/getComplaintEvidences', [ComplaintController::class, 'getComplaintEvidences']);
+Route::post('/setWasApproved', [ComplaintController::class, 'setWasApproved'])->middleware('auth:sanctum');
 
 // Rutas de calificaion de usuario
 Route::post('/setRating', [RatingsController::class, 'setRating'])->middleware('auth:sanctum');;
