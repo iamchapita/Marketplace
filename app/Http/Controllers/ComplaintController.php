@@ -232,7 +232,7 @@ class ComplaintController extends Controller
                 'complaints.description as complaintDescription',
                 'complaints.evidences as complaintEvidences',
                 'complaints.isAwaitingResponse as complaintIsAwaitingResponse',
-                DB::raw('CASE WHEN wasApproved IS NULL THEN "N/D" ELSE IF(wasApproved = 1, "Aceptada", "Denegada") END as complaintWasApproved'),
+                'complaints.wasApproved AS complaintWasApproved',
                 'complaints.created_at as complaintCreatedAt',
                 'complaints.updated_at as complaintUpdatedAt'
             )
